@@ -8,6 +8,7 @@ import (
 	"github.com/getlantern/systray"
 
 	"github.com/sonjek/mouse-stay-up/internal/mouse"
+	"github.com/sonjek/mouse-stay-up/internal/utils"
 )
 
 var (
@@ -61,6 +62,7 @@ func (t *Tray) onReady() {
 	mDisable := systray.AddMenuItem("Disable", "Disable mouse movement")
 	mInterval := systray.AddMenuItem("Sleep Interval", "Set mouse movement interval")
 	systray.AddSeparator()
+	mAbout := systray.AddMenuItem("About", "Open GitHub repo")
 	mExit := systray.AddMenuItem("Exit", "Exit the application")
 
 	// Hide the enable option since it's already enabled by default
@@ -101,6 +103,8 @@ func (t *Tray) onReady() {
 				// When an interval item is clicked, update the sleep interval and checkmarks
 				t.mouseController.SetSleepIntervalSec(interval)
 				t.updateIntervalChecks(interval)
+			case <-mAbout.ClickedCh:
+				utils.OpenWebPage(t.mouseController.GitRepo)
 			case <-mExit.ClickedCh:
 				systray.Quit()
 				return

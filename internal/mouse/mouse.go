@@ -9,13 +9,15 @@ import (
 
 type Controller struct {
 	Enabled       bool
+	GitRepo       string
 	SleepInterval time.Duration
 	LastX, LastY  int
 }
 
-func NewController() *Controller {
+func NewController(gitRepo string) *Controller {
 	return &Controller{
 		Enabled: true,
+		GitRepo: gitRepo,
 	}
 }
 
