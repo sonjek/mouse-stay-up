@@ -63,7 +63,7 @@ func (t *Tray) onReady() {
 	mInterval := systray.AddMenuItem("Sleep Interval", "Set mouse movement interval")
 	systray.AddSeparator()
 	mAbout := systray.AddMenuItem("About", "Open GitHub repo")
-	mExit := systray.AddMenuItem("Exit", "Exit the application")
+	mQuit := systray.AddMenuItem("Quit", "Quit the application")
 
 	// Hide the enable option since it's already enabled by default
 	if t.mouseController.Enabled {
@@ -105,7 +105,7 @@ func (t *Tray) onReady() {
 				t.updateIntervalChecks(interval)
 			case <-mAbout.ClickedCh:
 				utils.OpenWebPage(t.mouseController.GitRepo)
-			case <-mExit.ClickedCh:
+			case <-mQuit.ClickedCh:
 				systray.Quit()
 				return
 			}
