@@ -93,11 +93,13 @@ func (t *Tray) onReady() {
 				t.mouseController.Enabled = true
 				mEnable.Hide()
 				mDisable.Show()
+				mInterval.Enable()
 				go t.mouseController.MoveMouse()
 			case <-mDisable.ClickedCh:
 				t.mouseController.Enabled = false
 				mDisable.Hide()
 				mEnable.Show()
+				mInterval.Disable()
 			case interval := <-intervalClicks:
 				// When an interval item is clicked, update the sleep interval and checkmarks
 				t.mouseController.SetSleepIntervalSec(interval)
