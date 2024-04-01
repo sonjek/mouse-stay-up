@@ -60,7 +60,7 @@ func (t *Tray) onReady() {
 	// Create menu items for enable/disable mouse movement, change sleep interval and exit
 	mEnable := systray.AddMenuItem("Enable", "Enable mouse movement")
 	mDisable := systray.AddMenuItem("Disable", "Disable mouse movement")
-	mInterval := systray.AddMenuItem("Sleep Interval", "Set mouse movement interval")
+	mInterval := systray.AddMenuItem("Check Interval", "Set mouse movement interval")
 	systray.AddSeparator()
 	mAbout := systray.AddMenuItem("About", "Open GitHub repo")
 	mQuit := systray.AddMenuItem("Quit", "Quit the application")
