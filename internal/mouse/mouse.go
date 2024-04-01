@@ -37,11 +37,8 @@ func (c *Controller) MoveMouse() {
 			robotgo.MoveSmoothRelative(relX, relY)
 		}
 
-		// Get new mouse position
-		newX, newY := robotgo.Location()
-
 		// Update last known mouse position
-		c.LastX, c.LastY = newX, newY
+		c.LastX, c.LastY = robotgo.Location()
 
 		time.Sleep(c.SleepInterval)
 	}
