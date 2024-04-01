@@ -29,9 +29,9 @@ func (c *Controller) MoveMouse() {
 		// Check if the mouse position has changed since the previous run
 		// If position has not changed, then move the cursor
 		if c.LastX == curX && c.LastY == curY {
-			// Random movement distance along the X-axis and Y-axis (between 2 and 5)
-			relX := (rand.N(8) - 4) * 2
-			relY := (rand.N(8) - 4) * 2
+			// Random movement distance along the X-axis and Y-axis (between -8 and 8)
+			relX := (rand.N(9) - 4) * 2
+			relY := (rand.N(9) - 4) * 2
 
 			// Move the cursor
 			robotgo.MoveSmoothRelative(relX, relY)
