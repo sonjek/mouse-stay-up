@@ -11,5 +11,7 @@ func OpenWebPage(url string) {
 		exec.Command("open", url).Start()
 	case "linux":
 		exec.Command("xdg-open", url).Start()
+	default:
+		panic("unsupported platform")
 	}
 }
