@@ -74,8 +74,6 @@ func (t *Tray) onReady() {
 
 	// Add interval selection submenu items
 	t.addIntervalItem(mInterval, "10-60 sec", -1)
-	t.addIntervalItem(mInterval, "10 sec", 10)
-	t.addIntervalItem(mInterval, "20 sec", 20)
 	t.addIntervalItem(mInterval, "30 sec", 30)
 	t.addIntervalItem(mInterval, "60 sec", 60)
 
