@@ -40,7 +40,8 @@ func (c *Controller) MoveMouse() {
 		// Update last known mouse position
 		c.LastX, c.LastY = robotgo.Location()
 
-		time.Sleep(c.SleepInterval)
+		// Sleep before the next iteration
+		c.sleep()
 	}
 }
 
@@ -50,4 +51,17 @@ func (c *Controller) SetSleepInterval(interval time.Duration) {
 
 func (c *Controller) SetSleepIntervalSec(sec int) {
 	c.SetSleepInterval(time.Duration(sec) * time.Second)
+}
+
+func (c *Controller) sleep() {
+	var duration time.Duration
+
+	if c.SleepInterval > 0 {
+		duration = c.SleepInterval
+	} else {
+		// Get random duration between 10-60 sec
+		duration = time.Duration(rand.N(51)+10) * time.Second
+	}
+
+	time.Sleep(duration)
 }

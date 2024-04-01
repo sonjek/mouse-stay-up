@@ -72,17 +72,18 @@ func (t *Tray) onReady() {
 		mDisable.Hide()
 	}
 
-	// Default sleep interval
-	t.mouseController.SetSleepIntervalSec(10)
-
 	// Add interval selection submenu items
+	t.addIntervalItem(mInterval, "10-60 sec", -1)
 	t.addIntervalItem(mInterval, "10 sec", 10)
 	t.addIntervalItem(mInterval, "20 sec", 20)
 	t.addIntervalItem(mInterval, "30 sec", 30)
 	t.addIntervalItem(mInterval, "60 sec", 60)
 
+	// Set the default sleep interval
+	t.mouseController.SetSleepIntervalSec(-1)
+
 	// Mark the default interval
-	t.intervalItems[10].Check()
+	t.intervalItems[-1].Check()
 
 	// Create a channel to listen for interval item clicks
 	intervalClicks := t.createIntervalClicksChannel()
