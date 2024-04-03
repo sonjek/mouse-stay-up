@@ -23,6 +23,9 @@ func NewController(gitRepo string) *Controller {
 
 func (c *Controller) MoveMouse() {
 	for c.Enabled {
+		// Sleep before the check
+		c.sleep()
+
 		// Get current mouse position
 		curX, curY := robotgo.Location()
 
@@ -39,9 +42,6 @@ func (c *Controller) MoveMouse() {
 
 		// Update last known mouse position
 		c.LastX, c.LastY = robotgo.Location()
-
-		// Sleep before the next iteration
-		c.sleep()
 	}
 }
 
