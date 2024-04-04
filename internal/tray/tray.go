@@ -104,7 +104,9 @@ func (t *Tray) onReady() {
 				t.config.SetWorkingHoursInterval(workingHoursInterval)
 				t.updateNightModeIntervalChecks(t.config.WorkingHoursInterval)
 			case <-mAbout.ClickedCh:
-				utils.OpenWebPage(t.config.GitRepo)
+				if err := utils.OpenWebPage(t.config.GitRepo); err != nil {
+					panic(err)
+				}
 			case <-mQuit.ClickedCh:
 				systray.Quit()
 				return
