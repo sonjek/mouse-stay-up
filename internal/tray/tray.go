@@ -33,16 +33,18 @@ func loadIcon() ([]byte, error) {
 }
 
 type Tray struct {
-	mouseController *mouse.Controller
-	config          *config.Config
-	intervalItems   map[int]*systray.MenuItem
+	mouseController       *mouse.Controller
+	config                *config.Config
+	intervalItems         map[int]*systray.MenuItem
+	workingHoursMenuItems map[string]*systray.MenuItem
 }
 
 func NewTray(mouseController *mouse.Controller, config *config.Config) *Tray {
 	return &Tray{
-		mouseController: mouseController,
-		config:          config,
-		intervalItems:   make(map[int]*systray.MenuItem),
+		mouseController:       mouseController,
+		config:                config,
+		intervalItems:         make(map[int]*systray.MenuItem),
+		workingHoursMenuItems: make(map[string]*systray.MenuItem),
 	}
 }
 
@@ -64,6 +66,7 @@ func (t *Tray) onReady() {
 	mEnable := systray.AddMenuItem("Enable", "Enable mouse movement")
 	mDisable := systray.AddMenuItem("Disable", "Disable mouse movement")
 	mInterval := systray.AddMenuItem("Check Interval", "Set mouse movement interval")
+	mWorkingHours := systray.AddMenuItem("Working hours", "Select a range of working hours")
 	systray.AddSeparator()
 	mAbout := systray.AddMenuItem("About", "Open GitHub repo")
 	mQuit := systray.AddMenuItem("Quit", "Quit the application")
@@ -86,6 +89,16 @@ func (t *Tray) onReady() {
 	// Create a channel to listen for interval item clicks
 	intervalClicks := t.createIntervalClicksChannel()
 
+	// Add interval selection submenu items
+	for _, hours := range t.config.WorkingHours {
+		t.addWorkingHoursItems(mWorkingHours, hours)
+	}
+
+	// Set a marker for the default working hours interval
+	t.workingHoursMenuItems[t.config.WorkingHoursInterval].Check()
+
+	workingHoursIntervalClicks := t.createWorkingHoursIntervalClicksChannel()
+
 	go func() {
 		for {
 			select {
@@ -94,16 +107,22 @@ func (t *Tray) onReady() {
 				mEnable.Hide()
 				mDisable.Show()
 				mInterval.Enable()
+				mWorkingHours.Enable()
 				go t.mouseController.MoveMouse()
 			case <-mDisable.ClickedCh:
 				t.config.Enabled = false
 				mDisable.Hide()
 				mEnable.Show()
 				mInterval.Disable()
+				mWorkingHours.Disable()
 			case interval := <-intervalClicks:
 				// When an interval item is clicked, update the sleep interval and checkmarks
 				t.config.SetSleepIntervalSec(interval)
 				t.updateIntervalChecks(interval)
+			case workingHoursInterval := <-workingHoursIntervalClicks:
+				// When an hours interval item is clicked, update the workingHoursInterval interval and checkmarks
+				t.config.SetWorkingHoursInterval(workingHoursInterval)
+				t.updateNightModeIntervalChecks(t.config.WorkingHoursInterval)
 			case <-mAbout.ClickedCh:
 				utils.OpenWebPage(t.config.GitRepo)
 			case <-mQuit.ClickedCh:
@@ -141,6 +160,36 @@ func (t *Tray) createIntervalClicksChannel() <-chan int {
 // Updates the checkmarks for interval selection
 func (t *Tray) updateIntervalChecks(selectedInterval int) {
 	for interval, item := range t.intervalItems {
+		if interval == selectedInterval {
+			item.Check()
+		} else {
+			item.Uncheck()
+		}
+	}
+}
+
+// Adds a submenu item for selecting a working hours interval
+func (t *Tray) addWorkingHoursItems(parent *systray.MenuItem, interval string) {
+	t.workingHoursMenuItems[interval] = parent.AddSubMenuItem(interval, interval)
+}
+
+// Creates and returns a channel that listens to all working hours interval item clicks
+func (t *Tray) createWorkingHoursIntervalClicksChannel() <-chan string {
+	clicks := make(chan string)
+	for interval, item := range t.workingHoursMenuItems {
+		go func(interval string, item *systray.MenuItem) {
+			for {
+				<-item.ClickedCh
+				clicks <- interval
+			}
+		}(interval, item)
+	}
+	return clicks
+}
+
+// Updates the checkmarks for interval selection
+func (t *Tray) updateNightModeIntervalChecks(selectedInterval string) {
+	for interval, item := range t.workingHoursMenuItems {
 		if interval == selectedInterval {
 			item.Check()
 		} else {

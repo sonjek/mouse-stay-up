@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/go-vgo/robotgo"
-
 	"github.com/sonjek/mouse-stay-up/internal/config"
+	"github.com/sonjek/mouse-stay-up/internal/utils"
 )
 
 type Controller struct {
@@ -24,6 +24,13 @@ func (c *Controller) MoveMouse() {
 	for c.config.Enabled {
 		// Sleep before the check
 		c.sleep()
+
+		// Check if the current time is within working hours.
+		// If not, there is no reason to move the cursor.
+		isWorkingHours := utils.IsInWorkingHours(c.config.WorkingHoursInterval)
+		if !isWorkingHours {
+			continue
+		}
 
 		// Get current mouse position
 		curX, curY := robotgo.Location()
