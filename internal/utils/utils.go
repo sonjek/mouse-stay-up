@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
 	"math/rand/v2"
 	"os/exec"
@@ -12,15 +13,21 @@ import (
 // layout is the time format layout
 const timeLayout = "15:04"
 
-func OpenWebPage(url string) {
+func OpenWebPage(url string) error {
+	var cmd *exec.Cmd
 	switch runtime.GOOS {
 	case "darwin":
-		exec.Command("open", url).Start()
+		cmd = exec.Command("open", url)
 	case "linux":
-		exec.Command("xdg-open", url).Start()
+		cmd = exec.Command("xdg-open", url)
 	default:
-		panic("unsupported platform")
+		return errors.New("unsupported platform")
 	}
+
+	if err := cmd.Start(); err != nil {
+		return err
+	}
+	return nil
 }
 
 func IsInWorkingHours(timeWindow string) bool {
