@@ -7,6 +7,7 @@ import (
 
 	"github.com/getlantern/systray"
 
+	"github.com/sonjek/mouse-stay-up/internal/config"
 	"github.com/sonjek/mouse-stay-up/internal/mouse"
 	"github.com/sonjek/mouse-stay-up/internal/utils"
 )
@@ -33,12 +34,14 @@ func loadIcon() ([]byte, error) {
 
 type Tray struct {
 	mouseController *mouse.Controller
+	config          *config.Config
 	intervalItems   map[int]*systray.MenuItem
 }
 
-func NewTray(mouseController *mouse.Controller) *Tray {
+func NewTray(mouseController *mouse.Controller, config *config.Config) *Tray {
 	return &Tray{
 		mouseController: mouseController,
+		config:          config,
 		intervalItems:   make(map[int]*systray.MenuItem),
 	}
 }
@@ -66,7 +69,7 @@ func (t *Tray) onReady() {
 	mQuit := systray.AddMenuItem("Quit", "Quit the application")
 
 	// Hide the enable option since it's already enabled by default
-	if t.mouseController.Enabled {
+	if t.config.Enabled {
 		mEnable.Hide()
 	} else {
 		mDisable.Hide()
@@ -77,11 +80,8 @@ func (t *Tray) onReady() {
 	t.addIntervalItem(mInterval, "30 sec", 30)
 	t.addIntervalItem(mInterval, "60 sec", 60)
 
-	// Set the default sleep interval
-	t.mouseController.SetSleepIntervalSec(-1)
-
 	// Mark the default interval
-	t.intervalItems[-1].Check()
+	t.intervalItems[int(t.config.SleepInterval)].Check()
 
 	// Create a channel to listen for interval item clicks
 	intervalClicks := t.createIntervalClicksChannel()
@@ -90,22 +90,22 @@ func (t *Tray) onReady() {
 		for {
 			select {
 			case <-mEnable.ClickedCh:
-				t.mouseController.Enabled = true
+				t.config.Enabled = true
 				mEnable.Hide()
 				mDisable.Show()
 				mInterval.Enable()
 				go t.mouseController.MoveMouse()
 			case <-mDisable.ClickedCh:
-				t.mouseController.Enabled = false
+				t.config.Enabled = false
 				mDisable.Hide()
 				mEnable.Show()
 				mInterval.Disable()
 			case interval := <-intervalClicks:
 				// When an interval item is clicked, update the sleep interval and checkmarks
-				t.mouseController.SetSleepIntervalSec(interval)
+				t.config.SetSleepIntervalSec(interval)
 				t.updateIntervalChecks(interval)
 			case <-mAbout.ClickedCh:
-				utils.OpenWebPage(t.mouseController.GitRepo)
+				utils.OpenWebPage(t.config.GitRepo)
 			case <-mQuit.ClickedCh:
 				systray.Quit()
 				return
@@ -114,7 +114,7 @@ func (t *Tray) onReady() {
 	}()
 
 	// Start moving the mouse in a circle immediately if enabled
-	if t.mouseController.Enabled {
+	if t.config.Enabled {
 		go t.mouseController.MoveMouse()
 	}
 }

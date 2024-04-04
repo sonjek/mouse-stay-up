@@ -5,24 +5,23 @@ import (
 	"time"
 
 	"github.com/go-vgo/robotgo"
+
+	"github.com/sonjek/mouse-stay-up/internal/config"
 )
 
 type Controller struct {
-	Enabled       bool
-	GitRepo       string
-	SleepInterval time.Duration
-	LastX, LastY  int
+	config       *config.Config
+	LastX, LastY int
 }
 
-func NewController(gitRepo string) *Controller {
+func NewController(config *config.Config) *Controller {
 	return &Controller{
-		Enabled: true,
-		GitRepo: gitRepo,
+		config: config,
 	}
 }
 
 func (c *Controller) MoveMouse() {
-	for c.Enabled {
+	for c.config.Enabled {
 		// Sleep before the check
 		c.sleep()
 
@@ -45,19 +44,11 @@ func (c *Controller) MoveMouse() {
 	}
 }
 
-func (c *Controller) SetSleepInterval(interval time.Duration) {
-	c.SleepInterval = interval
-}
-
-func (c *Controller) SetSleepIntervalSec(sec int) {
-	c.SetSleepInterval(time.Duration(sec) * time.Second)
-}
-
 func (c *Controller) sleep() {
 	var duration time.Duration
 
-	if c.SleepInterval > 0 {
-		duration = c.SleepInterval
+	if c.config.SleepInterval > 0 {
+		duration = c.config.SleepInterval
 	} else {
 		// Get random duration between 10-60 sec
 		duration = time.Duration(rand.N(51)+10) * time.Second
