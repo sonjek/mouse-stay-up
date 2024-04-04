@@ -52,14 +52,7 @@ func (c *Controller) MoveMouse() {
 }
 
 func (c *Controller) sleep() {
-	var duration time.Duration
-
-	if c.config.SleepInterval > 0 {
-		duration = c.config.SleepInterval
-	} else {
-		// Get random duration between 10-60 sec
-		duration = time.Duration(rand.N(51)+10) * time.Second
-	}
-
+	// Get random duration between 10-60 sec
+	duration := time.Duration(rand.N(51)+10) * time.Second
 	time.Sleep(duration)
 }
