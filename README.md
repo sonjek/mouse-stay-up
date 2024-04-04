@@ -1,8 +1,44 @@
 # Mouse-Stay-Up
-This is a lightweight application designed to keep your computer awake by moving the cursor when it detects periods of inactivity.
+
+This lightweight application is designed to prevent your computer from entering sleep mode by periodically moving the cursor when it detects periods of inactivity.
 
 
 ## Installation from source
+
+### Prepare Build Environment (macOS)
+
+For macOS systems, the installation of build essential tools and development libraries is not needed.
+
+### Prepare Build Environment (Debian-Based Linux)
+
+To build the application on Debian-based Linux systems, follow these steps to install the necessary dependencies:
+
+1. **Install Build Essential Tools**:
+   Install the essential tools required for building software on Debian-based systems:
+
+    ```bash
+    sudo apt install build-essential
+    ```
+
+2. **Install Development Libraries**:
+
+    - **libx11-dev**:
+      Install the development files for the X11 library, which is required for graphical applications:
+
+        ```bash
+        sudo apt install libx11-dev
+        ```
+
+    - **libayatana-appindicator3-dev**:
+      Install the development files for the Ayatana AppIndicator library, which is used for creating application indicators:
+
+        ```bash
+        sudo apt install libayatana-appindicator3-dev
+        ```
+
+
+### Build the Application
+
 
 1. Verify that you have `Go 1.22+` installed
    ```sh
