@@ -6,16 +6,13 @@ import (
 	"io"
 
 	"github.com/getlantern/systray"
-
 	"github.com/sonjek/mouse-stay-up/internal/config"
 	"github.com/sonjek/mouse-stay-up/internal/mouse"
 	"github.com/sonjek/mouse-stay-up/internal/utils"
 )
 
-var (
-	//go:embed icon.png
-	iconFile embed.FS
-)
+//go:embed icon.png
+var iconFile embed.FS
 
 func loadIcon() ([]byte, error) {
 	file, err := iconFile.Open("icon.png")

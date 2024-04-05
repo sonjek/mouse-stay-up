@@ -1,0 +1,46 @@
+run:
+  concurrency: 4
+  deadline: 5m
+  timeout: 5m
+
+output:
+  sort-results: true
+
+linters:
+  enable:
+    - asciicheck
+    - depguard
+    - dupword
+    - durationcheck
+    - errorlint
+    - gosec
+    - gocritic
+    - gofmt
+    - gofumpt
+    - goimports
+    - misspell
+    - nolintlint
+    - predeclared
+    - revive
+    - testifylint
+    - unconvert
+
+linters-settings:
+  depguard:
+    rules:
+      main:
+        deny:
+          - pkg: "io/ioutil"
+            desc: "Use corresponding 'os' or 'io' functions instead."
+          - pkg: "github.com/pkg/errors"
+            desc: "Use 'errors' or 'fmt' instead of github.com/pkg/errors"
+          - pkg: "golang.org/x/exp/slices"
+            desc: "Use 'slices' instead."
+  revive:
+    # https://github.com/mgechev/revive/blob/master/defaults.toml
+    # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md
+    rules:
+      # A lot of false positives: incorrectly identifies channel draining as "empty code block".
+      # See https://github.com/mgechev/revive/issues/386
+      - name: empty-block
+        disabled: true
