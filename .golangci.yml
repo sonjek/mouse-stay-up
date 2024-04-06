@@ -1,12 +1,5 @@
-run:
-  concurrency: 4
-  deadline: 5m
-  timeout: 5m
-
-output:
-  sort-results: true
-
 linters:
+  # https://golangci-lint.run/usage/linters/#enabled-by-default
   enable:
     - asciicheck
     - depguard
@@ -26,6 +19,8 @@ linters:
     - unconvert
 
 linters-settings:
+  gofmt:
+    simplify: true
   depguard:
     rules:
       main:
@@ -36,11 +31,26 @@ linters-settings:
             desc: "Use 'errors' or 'fmt' instead of github.com/pkg/errors"
           - pkg: "golang.org/x/exp/slices"
             desc: "Use 'slices' instead."
+
   revive:
     # https://github.com/mgechev/revive/blob/master/defaults.toml
     # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md
+    enable-all-rules: true
+    ignore-generated-header: true
+    severity: warning
     rules:
-      # A lot of false positives: incorrectly identifies channel draining as "empty code block".
-      # See https://github.com/mgechev/revive/issues/386
-      - name: empty-block
+      - name: line-length-limit
+        severity: error
+        arguments: [120]
+      - name: add-constant
         disabled: true
+      - name: cognitive-complexity
+        disabled: true
+      - name: cyclomatic
+        disabled: true
+      - name: unused-receiver
+        disabled: true
+      - name: unhandled-error
+        arguments:
+        - "fmt.Println"
+        - "fmt.Printf"
