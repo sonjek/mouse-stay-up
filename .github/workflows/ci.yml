@@ -11,7 +11,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  files-changed:
+    uses: ./.github/workflows/files-changed.yml
+
   lint:
+    if: needs.files-changed.outputs.app == 'true' || needs.files-changed.outputs.actions == 'true'
+    needs: files-changed
     runs-on: macos-latest
     steps:
       - name: Checkout
@@ -30,6 +35,8 @@ jobs:
           skip-cache: true
           args: --timeout=10m --verbose
   build:
+    if: needs.files-changed.outputs.app == 'true' || needs.files-changed.outputs.actions == 'true'
+    needs: files-changed
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
