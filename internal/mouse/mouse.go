@@ -10,24 +10,24 @@ import (
 )
 
 type Controller struct {
-	config       *config.Config
+	conf         *config.Config
 	LastX, LastY int
 }
 
-func NewController(config *config.Config) *Controller {
+func NewController(conf *config.Config) *Controller {
 	return &Controller{
-		config: config,
+		conf: conf,
 	}
 }
 
 func (c *Controller) MoveMouse() {
-	for c.config.Enabled {
+	for c.conf.Enabled {
 		// Sleep before the check
 		c.sleep()
 
 		// Check if the current time is within working hours.
 		// If not, there is no reason to move the cursor.
-		isWorkingHours := utils.IsInWorkingHours(c.config.WorkingHoursInterval)
+		isWorkingHours := utils.IsInWorkingHours(c.conf.WorkingHoursInterval)
 		if !isWorkingHours {
 			continue
 		}

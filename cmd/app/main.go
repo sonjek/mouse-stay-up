@@ -7,8 +7,8 @@ import (
 )
 
 func main() {
-	config := config.NewConfig()
-	mc := mouse.NewController(config)
-	trayIcon := tray.NewTray(mc, config)
+	conf := config.NewConfig()
+	mc := mouse.NewController(conf)
+	trayIcon := tray.NewTray(mc, conf)
 	trayIcon.Run()
 }
