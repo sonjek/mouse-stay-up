@@ -24,10 +24,7 @@ func OpenWebPage(url string) error {
 		return errors.New("unsupported platform")
 	}
 
-	if err := cmd.Start(); err != nil {
-		return err
-	}
-	return nil
+	return cmd.Start()
 }
 
 func IsInWorkingHours(timeWindow string) bool {
