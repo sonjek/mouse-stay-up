@@ -31,14 +31,14 @@ func loadIcon() ([]byte, error) {
 
 type Tray struct {
 	mouseController       *mouse.Controller
-	config                *config.Config
+	conf                  *config.Config
 	workingHoursMenuItems map[string]*systray.MenuItem
 }
 
-func NewTray(mouseController *mouse.Controller, config *config.Config) *Tray {
+func NewTray(mouseController *mouse.Controller, conf *config.Config) *Tray {
 	return &Tray{
 		mouseController:       mouseController,
-		config:                config,
+		conf:                  conf,
 		workingHoursMenuItems: make(map[string]*systray.MenuItem),
 	}
 }
@@ -66,19 +66,19 @@ func (t *Tray) onReady() {
 	mQuit := systray.AddMenuItem("Quit", "Quit the application")
 
 	// Hide the enable option since it's already enabled by default
-	if t.config.Enabled {
+	if t.conf.Enabled {
 		mEnable.Hide()
 	} else {
 		mDisable.Hide()
 	}
 
 	// Add interval selection submenu items
-	for _, hours := range t.config.WorkingHours {
+	for _, hours := range t.conf.WorkingHours {
 		t.addWorkingHoursItems(mWorkingHours, hours)
 	}
 
 	// Set a marker for the default working hours interval
-	t.workingHoursMenuItems[t.config.WorkingHoursInterval].Check()
+	t.workingHoursMenuItems[t.conf.WorkingHoursInterval].Check()
 
 	workingHoursIntervalClicks := t.createWorkingHoursIntervalClicksChannel()
 
@@ -86,22 +86,22 @@ func (t *Tray) onReady() {
 		for {
 			select {
 			case <-mEnable.ClickedCh:
-				t.config.Enabled = true
+				t.conf.Enabled = true
 				mEnable.Hide()
 				mDisable.Show()
 				mWorkingHours.Enable()
 				go t.mouseController.MoveMouse()
 			case <-mDisable.ClickedCh:
-				t.config.Enabled = false
+				t.conf.Enabled = false
 				mDisable.Hide()
 				mEnable.Show()
 				mWorkingHours.Disable()
 			case workingHoursInterval := <-workingHoursIntervalClicks:
 				// When an hours interval item is clicked, update the workingHoursInterval interval and checkmarks
-				t.config.SetWorkingHoursInterval(workingHoursInterval)
-				t.updateNightModeIntervalChecks(t.config.WorkingHoursInterval)
+				t.conf.SetWorkingHoursInterval(workingHoursInterval)
+				t.updateNightModeIntervalChecks(t.conf.WorkingHoursInterval)
 			case <-mAbout.ClickedCh:
-				if err := utils.OpenWebPage(t.config.GitRepo); err != nil {
+				if err := utils.OpenWebPage(t.conf.GitRepo); err != nil {
 					panic(err)
 				}
 			case <-mQuit.ClickedCh:
@@ -112,7 +112,7 @@ func (t *Tray) onReady() {
 	}()
 
 	// Start moving the mouse in a circle immediately if enabled
-	if t.config.Enabled {
+	if t.conf.Enabled {
 		go t.mouseController.MoveMouse()
 	}
 }
