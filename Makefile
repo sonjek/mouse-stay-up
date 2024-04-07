@@ -48,3 +48,8 @@ uninstall: clean
 .PHONY: start
 start: get-deps
 	go run ./cmd/app
+
+## test: Run unit tests
+.PHONY: test
+test:
+	@go test ./...

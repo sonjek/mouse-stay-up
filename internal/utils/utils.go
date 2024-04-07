@@ -2,7 +2,6 @@ package utils
 
 import (
 	"errors"
-	"fmt"
 	"math/rand/v2"
 	"os/exec"
 	"runtime"
@@ -35,9 +34,14 @@ func IsInWorkingHours(timeWindow string) bool {
 		return true
 	}
 
-	startTimeBefore := MakeRandomTime(parts[0])
-	endTimeAfter := MakeRandomTime(parts[1])
+	// Get the current date
 	currentTime := time.Now()
+
+	// Generate a datetime 3-14 minutes earlier than the specified time
+	startTimeBefore := addRandomTimeInterval(currentTime, parts[0])
+
+	// Generate a datetime 3-14 minutes later than the specified time
+	endTimeAfter := subtractRandomTimeInterval(currentTime, parts[1])
 
 	// Check if the current time is within the dynamic range
 	if currentTime.After(startTimeBefore) && currentTime.Before(endTimeAfter) {
@@ -46,28 +50,37 @@ func IsInWorkingHours(timeWindow string) bool {
 	return false
 }
 
-func MakeRandomTime(inputTime string) time.Time {
-	// Parse input time like 19:00 to date time
-	parsedTime, err := time.Parse(timeLayout, inputTime)
+func addRandomTimeInterval(currentTime time.Time, inputTime string) time.Time {
+	shiftTime, err := time.Parse(timeLayout, inputTime)
 	if err != nil {
-		fmt.Println("Error parsing time:", err)
-		return time.Time{}
+		panic(err)
 	}
 
-	// Generate a random interval between 3 to 14 minutes
-	randomInterval := time.Duration(rand.N(12)+3) * time.Minute
-
-	// Randomly decide whether to add or subtract the interval
-	if rand.N(2) == 0 {
-		parsedTime = parsedTime.Add(randomInterval)
-	} else {
-		parsedTime = parsedTime.Add(-randomInterval)
-	}
-
-	// Get the current date
-	now := time.Now()
+	shiftTime = shiftTime.Add(generateTimeInterval())
 
 	// Combine the current date with the parsed time
+	return combineNowAndShiftTime(currentTime, shiftTime)
+}
+
+func subtractRandomTimeInterval(currentTime time.Time, inputTime string) time.Time {
+	shiftTime, err := time.Parse(timeLayout, inputTime)
+	if err != nil {
+		panic(err)
+	}
+
+	shiftTime = shiftTime.Add(-generateTimeInterval())
+
+	// Combine the current date with the parsed time
+	return combineNowAndShiftTime(currentTime, shiftTime)
+}
+
+// Generate a random interval between 3 to 14 minutes
+func generateTimeInterval() time.Duration {
+	return time.Duration(rand.N(12)+3) * time.Minute
+}
+
+// Combine the current date with the parsed time (hour-minute)
+func combineNowAndShiftTime(now, shiftTime time.Time) time.Time {
 	return time.Date(now.Year(), now.Month(), now.Day(),
-		parsedTime.Hour(), parsedTime.Minute(), parsedTime.Second(), 0, now.Location())
+		shiftTime.Hour(), shiftTime.Minute(), now.Second(), 0, now.Location())
 }
