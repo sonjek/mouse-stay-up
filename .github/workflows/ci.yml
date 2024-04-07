@@ -19,21 +19,21 @@ jobs:
     needs: files-changed
     runs-on: macos-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod
-          check-latest: true
-      - name: Setup golangci-lint
-        uses: golangci/golangci-lint-action@v4
-        with:
-          version: latest
-          skip-cache: true
-          args: --timeout=10m --verbose
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: go.mod
+        check-latest: true
+    - name: Setup golangci-lint
+      uses: golangci/golangci-lint-action@v4
+      with:
+        version: latest
+        skip-cache: true
+        args: --timeout=10m --verbose
   test:
     if: needs.files-changed.outputs.app == 'true' || needs.files-changed.outputs.actions == 'true'
     needs: files-changed
