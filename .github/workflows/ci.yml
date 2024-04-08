@@ -15,7 +15,7 @@ jobs:
     uses: ./.github/workflows/files-changed.yml
 
   lint:
-    if: needs.files-changed.outputs.app == 'true' || needs.files-changed.outputs.actions == 'true'
+    if: needs.files-changed.outputs.lint == 'true' || needs.files-changed.outputs.actions == 'true'
     needs: files-changed
     runs-on: macos-latest
     steps:
