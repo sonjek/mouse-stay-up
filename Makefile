@@ -53,3 +53,21 @@ start: get-deps
 .PHONY: test
 test:
 	@go test ./...
+
+
+## format: Fix code format issues
+.PHONY: format
+format:
+	go run mvdan.cc/gofumpt@latest -w -l .
+
+## deadcode: Run deadcode tool for find unreachable functions
+deadcode:
+	go run golang.org/x/tools/cmd/deadcode@latest -test ./...
+
+
+## audit: Quality checks
+.PHONY: audit
+audit:
+	go mod verify
+	go vet ./...
+	go run golang.org/x/vuln/cmd/govulncheck@latest ./...

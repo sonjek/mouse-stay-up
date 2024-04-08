@@ -90,4 +90,8 @@ Commands:
   install     Install binary file from local bin directory to /usr/local/bin/
   uninstall   Remove binary file from /usr/local/bin/
   start       Build and start application
+  test        Run unit tests
+  format      Fix code format issues
+  deadcode    Run deadcode tool for find unreachable functions
+  audit       Quality checks
 ```
