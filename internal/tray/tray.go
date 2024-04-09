@@ -86,13 +86,13 @@ func (t *Tray) onReady() {
 		for {
 			select {
 			case <-mEnable.ClickedCh:
-				t.conf.Enabled = true
+				t.conf.Toggle()
 				mEnable.Hide()
 				mDisable.Show()
 				mWorkingHours.Enable()
 				go t.mouseController.MoveMouse()
 			case <-mDisable.ClickedCh:
-				t.conf.Enabled = false
+				t.conf.Toggle()
 				mDisable.Hide()
 				mEnable.Show()
 				mWorkingHours.Disable()
