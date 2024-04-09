@@ -32,6 +32,9 @@ func loadIcon() ([]byte, error) {
 type Tray struct {
 	mouseController       *mouse.Controller
 	conf                  *config.Config
+	mEnable               *systray.MenuItem
+	mDisable              *systray.MenuItem
+	mWorkingHours         *systray.MenuItem
 	workingHoursMenuItems map[string]*systray.MenuItem
 }
 
@@ -58,24 +61,20 @@ func (t *Tray) onReady() {
 	systray.SetTooltip("Enable or Disable periodic mouse movements")
 
 	// Create menu items for enable/disable mouse movement, change working hours and exit
-	mEnable := systray.AddMenuItem("Enable", "Enable mouse movement")
-	mDisable := systray.AddMenuItem("Disable", "Disable mouse movement")
-	mWorkingHours := systray.AddMenuItem("Working hours", "Select a range of working hours")
+	t.mEnable = systray.AddMenuItem("Enable", "Enable mouse movement")
+	t.mDisable = systray.AddMenuItem("Disable", "Disable mouse movement")
+	t.mWorkingHours = systray.AddMenuItem("Working hours", "Select a range of working hours")
 	systray.AddSeparator()
 	mAbout := systray.AddMenuItem("About", "Open GitHub repo")
 	mQuit := systray.AddMenuItem("Quit", "Quit the application")
 
-	// Hide the enable option since it's already enabled by default
-	if t.conf.Enabled {
-		mEnable.Hide()
-	} else {
-		mDisable.Hide()
-	}
-
 	// Add interval selection submenu items
 	for _, hours := range t.conf.WorkingHours {
-		t.addWorkingHoursItems(mWorkingHours, hours)
+		t.addWorkingHoursItems(t.mWorkingHours, hours)
 	}
+
+	// Adjust visibilities based on the app state
+	t.applyEnableDisable()
 
 	// Set a marker for the default working hours interval
 	t.workingHoursMenuItems[t.conf.WorkingHoursInterval].Check()
@@ -85,23 +84,19 @@ func (t *Tray) onReady() {
 	go func() {
 		for {
 			select {
-			case <-mEnable.ClickedCh:
+			case <-t.mEnable.ClickedCh:
 				t.conf.ToggleEnableDisable()
-				mEnable.Hide()
-				mDisable.Show()
-				mWorkingHours.Enable()
+				t.applyEnableDisable()
 				go t.mouseController.MoveMouse()
-			case <-mDisable.ClickedCh:
+			case <-t.mDisable.ClickedCh:
 				t.conf.ToggleEnableDisable()
-				mDisable.Hide()
-				mEnable.Show()
-				mWorkingHours.Disable()
+				t.applyEnableDisable()
 			case workingHoursInterval := <-workingHoursIntervalClicks:
 				// When an hours interval item is clicked, update the workingHoursInterval interval and checkmarks
 				t.conf.SetWorkingHoursInterval(workingHoursInterval)
 				t.updateNightModeIntervalChecks(t.conf.WorkingHoursInterval)
 			case <-mAbout.ClickedCh:
-				if err := utils.OpenWebPage(t.conf.GitRepo); err != nil {
+				if err := utils.OpenWebPage(config.GitRepo); err != nil {
 					panic(err)
 				}
 			case <-mQuit.ClickedCh:
@@ -144,6 +139,19 @@ func (t *Tray) updateNightModeIntervalChecks(selectedInterval string) {
 		} else {
 			item.Uncheck()
 		}
+	}
+}
+
+// Adjust visibilities based on the app state
+func (t *Tray) applyEnableDisable() {
+	if t.conf.Enabled {
+		t.mEnable.Hide()
+		t.mDisable.Show()
+		t.mWorkingHours.Enable()
+	} else {
+		t.mEnable.Show()
+		t.mDisable.Hide()
+		t.mWorkingHours.Disable()
 	}
 }
 
