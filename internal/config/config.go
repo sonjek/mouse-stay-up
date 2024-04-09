@@ -34,7 +34,7 @@ func NewConfig() *Config {
 	}
 }
 
-func (c *Config) Toggle() {
+func (c *Config) ToggleEnableDisable() {
 	c.Enabled = !c.Enabled
 }
 
