@@ -37,7 +37,7 @@ func GetConfigFilePath(appName, configFileName string) string {
 }
 
 // Saves the struct to an configuration file
-func SaveStructToFile(configFilePath string, config interface{}) error {
+func SaveStructToFile(configFilePath string, config any) error {
 	// Reflect data sources from given struct
 	cfg := ini.Empty()
 	if err := ini.ReflectFrom(cfg, config); err != nil {
@@ -53,7 +53,7 @@ func SaveStructToFile(configFilePath string, config interface{}) error {
 }
 
 // Restores the configuration file into the struct
-func LoadFileToStruct(configFilePath string, config interface{}) bool {
+func LoadFileToStruct(configFilePath string, config any) bool {
 	// Try to load the configuration file from disk if it exists
 	cfg, err := ini.Load(configFilePath)
 	if err != nil {

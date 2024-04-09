@@ -1,6 +1,8 @@
 package config
 
 import (
+	"fmt"
+
 	"github.com/sonjek/mouse-stay-up/pkg/config"
 )
 
@@ -36,14 +38,15 @@ type Config struct {
 
 func init() {
 	// Create a folder to save the config file if it doesn't exist yet
-	config.CreateConfigFolder(appName)
+	if err := config.CreateConfigFolder(appName); err != nil {
+		fmt.Println(err)
+	}
 
 	// Calculate the configuration file path for saving when app parameters change
 	configFilePath = config.GetConfigFilePath(appName, configFileName)
 }
 
 func NewConfig() *Config {
-
 	// Define the default Config struct
 	appConfig := &Config{
 		Enabled:              true,
@@ -56,7 +59,7 @@ func NewConfig() *Config {
 
 	// Saves the struct to an configuration file if it doesn't exist yet
 	if !isRestored {
-		config.SaveStructToFile(configFilePath, appConfig)
+		saveConfig(appConfig)
 	}
 
 	return appConfig
@@ -65,11 +68,17 @@ func NewConfig() *Config {
 func (c *Config) ToggleEnableDisable() {
 	c.Enabled = !c.Enabled
 
-	config.SaveStructToFile(configFilePath, c)
+	saveConfig(c)
 }
 
 func (c *Config) SetWorkingHoursInterval(interval string) {
 	c.WorkingHoursInterval = interval
 
-	config.SaveStructToFile(configFilePath, c)
+	saveConfig(c)
+}
+
+func saveConfig(appConfig *Config) {
+	if err := config.SaveStructToFile(configFilePath, appConfig); err != nil {
+		fmt.Println(err)
+	}
 }
