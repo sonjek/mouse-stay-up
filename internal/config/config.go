@@ -34,6 +34,10 @@ func NewConfig() *Config {
 	}
 }
 
+func (c *Config) ToggleEnableDisable() {
+	c.Enabled = !c.Enabled
+}
+
 func (c *Config) SetWorkingHoursInterval(interval string) {
 	c.WorkingHoursInterval = interval
 }
