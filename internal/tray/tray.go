@@ -87,7 +87,6 @@ func (t *Tray) onReady() {
 			case <-t.mEnable.ClickedCh:
 				t.conf.ToggleEnableDisable()
 				t.applyEnableDisable()
-				go t.mouseController.MoveMouse()
 			case <-t.mDisable.ClickedCh:
 				t.conf.ToggleEnableDisable()
 				t.applyEnableDisable()
@@ -106,10 +105,8 @@ func (t *Tray) onReady() {
 		}
 	}()
 
-	// Start moving the mouse in a circle immediately if enabled
-	if t.conf.Enabled {
-		go t.mouseController.MoveMouse()
-	}
+	// Start moving the mouse if app enabled
+	go t.mouseController.MoveMouse()
 }
 
 // Adds a submenu item for selecting a working hours interval
