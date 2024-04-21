@@ -5,7 +5,7 @@ go 1.22
 require (
 	github.com/adrg/xdg v0.4.0
 	github.com/getlantern/systray v1.2.2
-	github.com/go-vgo/robotgo v0.110.0
+	github.com/go-vgo/robotgo v0.110.1
 	gopkg.in/ini.v1 v1.67.0
 )
 
@@ -23,7 +23,7 @@ require (
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/jezek/xgb v1.1.1 // indirect
 	github.com/kbinani/screenshot v0.0.0-20230812210009-b87d31814237 // indirect
-	github.com/lufia/plan9stats v0.0.0-20240226150601-1dcf7310316a // indirect
+	github.com/lufia/plan9stats v0.0.0-20240408141607-282e7b5d6b74 // indirect
 	github.com/lxn/win v0.0.0-20210218163916-a377121e959e // indirect
 	github.com/otiai10/gosseract v2.2.1+incompatible // indirect
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c // indirect
