@@ -61,8 +61,8 @@ func (t *Tray) onReady() {
 	systray.SetTooltip("Enable or Disable periodic mouse movements")
 
 	// Create menu items for enable/disable mouse movement, change working hours and exit
-	t.mEnable = systray.AddMenuItem("Enable", "Enable mouse movement")
-	t.mDisable = systray.AddMenuItem("Disable", "Disable mouse movement")
+	t.mEnable = systray.AddMenuItem("Enable movement", "Enable mouse movement")
+	t.mDisable = systray.AddMenuItem("Disable movement", "Disable mouse movement")
 	t.mWorkingHours = systray.AddMenuItem("Working hours", "Select a range of working hours")
 	systray.AddSeparator()
 	mAbout := systray.AddMenuItem("About", "Open GitHub repo")
