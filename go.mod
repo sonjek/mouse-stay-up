@@ -3,7 +3,7 @@ module github.com/sonjek/mouse-stay-up
 go 1.22
 
 require (
-	github.com/adrg/xdg v0.4.0
+	github.com/adrg/xdg v0.5.0
 	github.com/getlantern/systray v1.2.2
 	github.com/go-vgo/robotgo v0.110.1
 	gopkg.in/ini.v1 v1.67.0
@@ -45,5 +45,5 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/image v0.17.0 // indirect
-	golang.org/x/sys v0.21.0 // indirect
+	golang.org/x/sys v0.22.0 // indirect
 )
