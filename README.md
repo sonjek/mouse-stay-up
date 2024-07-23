@@ -4,6 +4,7 @@
 
 
 This lightweight application is designed to prevent your computer from entering sleep mode by periodically moving the cursor when it detects periods of inactivity.
+Additionally, the program allows you to disable the keyboard programmatically (MacOS only).
 
 ## Installation from source
 
