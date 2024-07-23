@@ -1,8 +1,9 @@
 package utils
 
 import (
+	"crypto/rand"
 	"errors"
-	"math/rand/v2"
+	"math/big"
 	"os/exec"
 	"runtime"
 	"strings"
@@ -76,11 +77,35 @@ func subtractRandomTimeInterval(currentTime time.Time, inputTime string) time.Ti
 
 // Generate a random interval between 3 to 14 minutes
 func generateTimeInterval() time.Duration {
-	return time.Duration(rand.N(12)+3) * time.Minute
+	n, err := rand.Int(rand.Reader, big.NewInt(12))
+	if err != nil {
+		panic(err)
+	}
+
+	return time.Duration(n.Int64()+3) * time.Minute
 }
 
 // Combine the current date with the parsed time (hour-minute)
 func combineNowAndShiftTime(now, shiftTime time.Time) time.Time {
 	return time.Date(now.Year(), now.Month(), now.Day(),
 		shiftTime.Hour(), shiftTime.Minute(), now.Second(), 0, now.Location())
+}
+
+// Random duration between 10-60 sec
+func GetRandomSleepDuration() time.Duration {
+	max := big.NewInt(51) // Upper bound is 51 to get values from 0 to 50
+	n, err := rand.Int(rand.Reader, max)
+	if err != nil {
+		panic(err)
+	}
+	return time.Duration(n.Int64()+10) * time.Second
+}
+
+// Random movement distance between -8 and 8
+func GetRandomOffset() int {
+	n, err := rand.Int(rand.Reader, big.NewInt(9))
+	if err != nil {
+		panic(err)
+	}
+	return int((n.Int64() - 4) * 2)
 }

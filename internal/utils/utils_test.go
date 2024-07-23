@@ -26,3 +26,23 @@ func TestCombineNowAndShiftTime(t *testing.T) {
 		t.Errorf("combineNowAndShiftTime(%v, %v) = %v, want %v", now, shiftTime, result, expected)
 	}
 }
+
+// Test value is within the range 10-60 sec
+func TestGetRandomSleepDuration(t *testing.T) {
+	for range 100 {
+		result := GetRandomSleepDuration()
+		if result < 10*time.Second || result > 60*time.Second {
+			t.Errorf("GetRandomSleepDuration() = %v, want %v to %v", result, 10*time.Second, 60*time.Second)
+		}
+	}
+}
+
+// Test value is within the range -8 and 8
+func TestGetRandomOffset(t *testing.T) {
+	for range 100 {
+		result := GetRandomOffset()
+		if result < -8 || result > 8 {
+			t.Errorf("GetRandomSleepDuration() = %v, want %v to %v", result, -8, 8)
+		}
+	}
+}

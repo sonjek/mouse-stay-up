@@ -1,7 +1,6 @@
 package mouse
 
 import (
-	"math/rand/v2"
 	"time"
 
 	"github.com/go-vgo/robotgo"
@@ -39,8 +38,8 @@ func (c *Controller) MoveMouse() {
 		// If position has not changed, then move the cursor
 		if c.LastX == curX && c.LastY == curY {
 			// Random movement distance along the X-axis and Y-axis (between -8 and 8)
-			relX := (rand.N(9) - 4) * 2
-			relY := (rand.N(9) - 4) * 2
+			relX := utils.GetRandomOffset()
+			relY := utils.GetRandomOffset()
 
 			// Move the cursor
 			robotgo.MoveSmoothRelative(relX, relY)
@@ -53,6 +52,6 @@ func (c *Controller) MoveMouse() {
 
 func (c *Controller) sleep() {
 	// Get random duration between 10-60 sec
-	duration := time.Duration(rand.N(51)+10) * time.Second
+	duration := utils.GetRandomSleepDuration()
 	time.Sleep(duration)
 }
