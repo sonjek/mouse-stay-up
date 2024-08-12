@@ -5,11 +5,12 @@ go 1.22
 require (
 	github.com/adrg/xdg v0.5.0
 	github.com/getlantern/systray v1.2.2
-	github.com/go-vgo/robotgo v0.110.1
+	github.com/go-vgo/robotgo v0.110.2
 	gopkg.in/ini.v1 v1.67.0
 )
 
 require (
+	github.com/dblohm7/wingoes v0.0.0-20231019175336-f6e33aa7cc34 // indirect
 	github.com/gen2brain/shm v0.1.0 // indirect
 	github.com/getlantern/context v0.0.0-20220418194847-3d5e7a086201 // indirect
 	github.com/getlantern/errors v1.0.4 // indirect
@@ -26,16 +27,18 @@ require (
 	github.com/lufia/plan9stats v0.0.0-20240513124658-fba389f38bae // indirect
 	github.com/lxn/win v0.0.0-20210218163916-a377121e959e // indirect
 	github.com/otiai10/gosseract v2.2.1+incompatible // indirect
+	github.com/otiai10/mint v1.6.3 // indirect
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c // indirect
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
 	github.com/robotn/xgb v0.0.0-20190912153532-2cb92d044934 // indirect
 	github.com/robotn/xgbutil v0.0.0-20190912154524-c861d6f87770 // indirect
 	github.com/shirou/gopsutil/v4 v4.24.7 // indirect
 	github.com/shoenig/go-m1cpu v0.1.6 // indirect
+	github.com/tailscale/win v0.0.0-20240403170916-6580b55d49ca // indirect
 	github.com/tklauser/go-sysconf v0.3.14 // indirect
 	github.com/tklauser/numcpus v0.8.0 // indirect
 	github.com/vcaesar/gops v0.40.0 // indirect
-	github.com/vcaesar/imgo v0.40.1 // indirect
+	github.com/vcaesar/imgo v0.40.2 // indirect
 	github.com/vcaesar/keycode v0.10.1 // indirect
 	github.com/vcaesar/tt v0.20.1 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
