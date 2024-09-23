@@ -44,8 +44,8 @@ github.com/go-ole/go-ole v1.3.0/go.mod h1:5LS6F96DhAwUc7C+1HLexzMXY1xGRSryjyPPKW
 github.com/go-stack/stack v1.8.0/go.mod h1:v0f6uXyyMGvRgIKkXu+yp6POWl0qKG85gN/melR3HDY=
 github.com/go-stack/stack v1.8.1 h1:ntEHSVwIt7PNXNpgPmVfMrNhLtgjlmnZha2kOpuRiDw=
 github.com/go-stack/stack v1.8.1/go.mod h1:dcoOX6HbPZSZptuspn9bctJ+N/CnF5gGygcUP3XYfe4=
-github.com/go-vgo/robotgo v0.110.2 h1:7uCrK5DSztrtwM1T6LAp6b6gVhl+XUD8Tpwzoy1SclU=
-github.com/go-vgo/robotgo v0.110.2/go.mod h1:ERKRRTIWCsypcrxWrUt/0ZXl5nVsUQkutYARvW22q98=
+github.com/go-vgo/robotgo v0.110.3 h1:MBtzPDyMUjqidWvco+L6h3p2WWbaxNe453h2Ru9c+8k=
+github.com/go-vgo/robotgo v0.110.3/go.mod h1:dtryDRfAcocB4TovDs9zl/l2eUVpwJswZCM4AQdBeBo=
 github.com/godbus/dbus/v5 v5.1.0 h1:4KLkAxT3aOY8Li4FRJe/KvhoNFFxo0m6fNuFUO8QJUk=
 github.com/godbus/dbus/v5 v5.1.0/go.mod h1:xhWf0FNVPg57R7Z0UbKHbJfkEywrmjJnf7w5xrFpKfA=
 github.com/google/go-cmp v0.5.8/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
