@@ -1,11 +1,12 @@
 module github.com/sonjek/mouse-stay-up
 
 go 1.22
+toolchain go1.22.5
 
 require (
 	github.com/adrg/xdg v0.5.0
 	github.com/getlantern/systray v1.2.2
-	github.com/go-vgo/robotgo v0.110.2
+	github.com/go-vgo/robotgo v0.110.3
 	gopkg.in/ini.v1 v1.67.0
 )
 
