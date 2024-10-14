@@ -5,7 +5,7 @@ go 1.23
 require (
 	github.com/adrg/xdg v0.5.0
 	github.com/getlantern/systray v1.2.2
-	github.com/go-vgo/robotgo v0.110.3
+	github.com/go-vgo/robotgo v0.110.5
 	gopkg.in/ini.v1 v1.67.0
 )
 
