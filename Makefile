@@ -3,21 +3,11 @@ BINNAME := mouse-stay-up
 TARGET_BIN := $(BINDIR)/$(BINNAME)
 INSTALL_PATH := /usr/local/bin
 
+# -------------------------------------------------------------------------------------------------
+# main
+# -------------------------------------------------------------------------------------------------
 
-## help: Display this help
-.PHONY: help
-help: Makefile
-	@echo "Usage:  make COMMAND"
-	@echo
-	@echo "Commands:"
-	@sed -n 's/^##//p' $< | column -ts ':' |  sed -e 's/^/ /'
-
-## get-deps: Download application dependencies
-.PHONY: get-deps
-get-deps:
-	@command -v go &> /dev/null || (echo "Please install GoLang" && false)
-	go mod download
-
+all: help
 
 ## build: Build application
 .PHONY: build
@@ -49,11 +39,39 @@ uninstall: clean
 start: get-deps
 	go run ./cmd/app
 
+# -------------------------------------------------------------------------------------------------
+# testing
+# -------------------------------------------------------------------------------------------------
+
 ## test: Run unit tests
 .PHONY: test
-test:
-	@go test ./...
+test: check-go
+	@go test -v -count=1 ./...
 
+# -------------------------------------------------------------------------------------------------
+# tools && shared
+# -------------------------------------------------------------------------------------------------
+
+## check-go: Ensure that Go is installed
+.PHONY: check-go
+check-go:
+	@command -v go &> /dev/null || (echo "Please install GoLang" && false)
+
+## tidy: Removes unused dependencies and adds missing ones
+.PHONY: tidy
+tidy: check-go
+	go mod tidy
+
+## update-deps: Update go dependencies
+.PHONY: update-deps
+update-deps: check-go
+	go get -u ./...
+	-@$(MAKE) tidy
+
+## get-deps: Download application dependencies
+.PHONY: get-deps
+get-deps: check-go
+	go mod download
 
 ## format: Fix code format issues
 .PHONY: format
@@ -61,13 +79,21 @@ format:
 	go run mvdan.cc/gofumpt@latest -w -l .
 
 ## deadcode: Run deadcode tool for find unreachable functions
+.PHONY: deadcode
 deadcode:
 	go run golang.org/x/tools/cmd/deadcode@latest -test ./...
 
-
 ## audit: Quality checks
 .PHONY: audit
-audit:
+audit: check-go
 	go mod verify
 	go vet ./...
 	go run golang.org/x/vuln/cmd/govulncheck@latest ./...
+
+## help: Display this help
+.PHONY: help
+help: Makefile
+	@echo "Usage:  make COMMAND"
+	@echo
+	@echo "Commands:"
+	@sed -n 's/^##//p' $< | column -ts ':' |  sed -e 's/^/ /'
