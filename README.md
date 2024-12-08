@@ -61,7 +61,7 @@ To build the application on Debian-based Linux systems, follow these steps to in
     $ make build
     ```
 
-    The binary file is built and ready to run from current folder:
+    The binary file is built and ready to run:
     ```
     $ ./bin/mouse-stay-up
     ```
@@ -71,6 +71,8 @@ To build the application on Debian-based Linux systems, follow these steps to in
    Installs to `/usr/local/bin/` by default:
     ```
     $ make install
+    or
+    $ sudo make install
     ```
 
    Install to a different location:
@@ -84,15 +86,18 @@ All available makefile actions:
 Usage:  make COMMAND
 
 Commands:
-  help        Display this help
-  get-deps    Download application dependencies
-  build       Build application
-  clean       Remove binary file from local bin directory
-  install     Install binary file from local bin directory to /usr/local/bin/
-  uninstall   Remove binary file from /usr/local/bin/
-  start       Build and start application
-  test        Run unit tests
-  format      Fix code format issues
-  deadcode    Run deadcode tool for find unreachable functions
-  audit       Quality checks
+  build         Build application
+  clean         Remove binary file from local bin directory
+  install       Install binary file from local bin directory to /usr/local/bin/
+  uninstall     Remove binary file from /usr/local/bin/
+  start         Build and start application
+  test          Run unit tests
+  check-go      Ensure that Go is installed
+  tidy          Removes unused dependencies and adds missing ones
+  update-deps   Update go dependencies
+  get-deps      Download application dependencies
+  format        Fix code format issues
+  deadcode      Run deadcode tool for find unreachable functions
+  audit         Quality checks
+  help          Display this help
 ```
