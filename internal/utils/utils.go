@@ -93,8 +93,8 @@ func combineNowAndShiftTime(now, shiftTime time.Time) time.Time {
 
 // Random duration between 10-60 sec
 func GetRandomSleepDuration() time.Duration {
-	max := big.NewInt(51) // Upper bound is 51 to get values from 0 to 50
-	n, err := rand.Int(rand.Reader, max)
+	maxValue := big.NewInt(51) // Upper bound is 51 to get values from 0 to 50
+	n, err := rand.Int(rand.Reader, maxValue)
 	if err != nil {
 		panic(err)
 	}
