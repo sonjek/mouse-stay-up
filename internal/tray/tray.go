@@ -6,7 +6,7 @@ import (
 	"io"
 	"runtime"
 
-	"github.com/getlantern/systray"
+	"fyne.io/systray"
 	"github.com/sonjek/mouse-stay-up/internal/config"
 	"github.com/sonjek/mouse-stay-up/internal/keyboard"
 	"github.com/sonjek/mouse-stay-up/internal/mouse"
