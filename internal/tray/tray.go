@@ -13,11 +13,11 @@ import (
 	"github.com/sonjek/mouse-stay-up/internal/utils"
 )
 
-//go:embed icon.png
+//go:embed icon.svg
 var iconFile embed.FS
 
 func loadIcon() ([]byte, error) {
-	file, err := iconFile.Open("icon.png")
+	file, err := iconFile.Open("icon.svg")
 	if err != nil {
 		return nil, err
 	}
