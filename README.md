@@ -10,40 +10,19 @@ Additionally, the program allows you to disable the keyboard programmatically (M
 
 ### Prepare Build Environment (macOS)
 
-For macOS systems, the installation of build essential tools and development libraries is not needed.
+For macOS systems, the installation of additional tools and development libraries is not needed.
 
-### Prepare Build Environment (Debian-Based Linux)
+### Prepare Build Environment (Linux/BSD)
 
-To build the application on Debian-based Linux systems, follow these steps to install the necessary dependencies:
-
-1. **Install Build Essential Tools**:
-   Install the essential tools required for building software on Debian-based systems:
-
-    ```bash
-    sudo apt install build-essential
-    ```
-
-2. **Install Development Libraries**:
-
-    - **libx11-dev**:
-      Install the development files for the X11 library, which is required for graphical applications:
-
-        ```bash
-        sudo apt install libx11-dev
-        ```
-
-    - **libayatana-appindicator3-dev**:
-      Install the development files for the Ayatana AppIndicator library, which is used for creating application indicators:
-
-        ```bash
-        sudo apt install libayatana-appindicator3-dev
-        ```
+You may require a proxy app which can convert the new DBus calls to the old format.
+More info in [systray](https://github.com/fyne-io/systray?tab=readme-ov-file#linuxbsd) library info.
+For Debian-based systems with GTK based trays, use [this](https://gist.github.com/archisman-panigrahi/cd571ddea1aa2c5e2b4fa7bcbee7d5df) script to install **snixembed**.
 
 
 ### Build the Application
 
 
-1. Verify that you have `Go 1.22+` installed
+1. Verify that you have `Go 1.23+` installed
    ```sh
    $ go version
    ```
