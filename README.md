@@ -22,7 +22,7 @@ For Debian-based systems with GTK based trays, use [this](https://gist.github.co
 ### Build the Application
 
 
-1. Verify that you have `Go 1.23+` installed
+1. Verify that you have `Go 1.24+` installed
    ```sh
    $ go version
    ```
