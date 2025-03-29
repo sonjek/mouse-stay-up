@@ -54,7 +54,6 @@ linters:
       # https://github.com/mgechev/revive/blob/master/defaults.toml
       # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md
       enable-all-rules: true
-      ignore-generated-header: true
       severity: error
       rules:
         - name: line-length-limit
