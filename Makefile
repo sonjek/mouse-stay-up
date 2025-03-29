@@ -3,6 +3,8 @@ BINNAME := mouse-stay-up
 TARGET_BIN := $(BINDIR)/$(BINNAME)
 INSTALL_PATH := /usr/local/bin
 
+GOLANGCI_LINT_PACKAGE ?= github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.0.2
+
 # -------------------------------------------------------------------------------------------------
 # main
 # -------------------------------------------------------------------------------------------------
@@ -73,7 +75,22 @@ update-deps: check-go
 get-deps: check-go
 	go mod download
 
-## format: Fix code format issues
+## lint: Run golangci-lint to lint go files
+.PHONY: lint
+lint:
+	go run $(GOLANGCI_LINT_PACKAGE) run
+
+## lint-fix: Run golangci-lint to lint go files and fix issues
+.PHONY: lint-fix
+lint-fix:
+	go run $(GOLANGCI_LINT_PACKAGE) run --fix
+
+## lint-fmt: Run golangci-lint fmt to show code format issues
+.PHONY: lint-fmt
+lint-fmt:
+	go run $(GOLANGCI_LINT_PACKAGE) fmt
+
+## format: Run gofumpt tool to fix code format issues
 .PHONY: format
 format:
 	go run mvdan.cc/gofumpt@latest -w -l .

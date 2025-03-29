@@ -21,7 +21,9 @@ func loadIcon() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer file.Close()
+
+	// Ignore error checking in Close to resolve the lint error
+	defer func() { _ = file.Close() }()
 
 	data, err := io.ReadAll(file)
 	if err != nil {

@@ -18,7 +18,7 @@ func CreateConfigFolder(appName string) error {
 
 	// Create a home folder if it does not exist
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
-		if err := os.MkdirAll(configPath, os.ModePerm); err != nil {
+		if err := os.MkdirAll(configPath, 0o750); err != nil {
 			return fmt.Errorf("error creating config directory: %w", err)
 		}
 	}
