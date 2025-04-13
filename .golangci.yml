@@ -32,10 +32,14 @@ linters:
     - ineffassign
     - gocritic
     - misspell
+    - mirror
     - nolintlint
     - predeclared
+    - perfsprint
     - revive
     - testifylint
+    - unused
+    - usestdlibvars
     - usetesting
     - unconvert
     - wastedassign
