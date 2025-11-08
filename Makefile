@@ -3,7 +3,7 @@ BINNAME := mouse-stay-up
 TARGET_BIN := $(BINDIR)/$(BINNAME)
 INSTALL_PATH := /usr/local/bin
 
-GOLANGCI_LINT_PACKAGE ?= github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.1.1
+GOLANGCI_LINT_PACKAGE ?= github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.6.1
 
 # -------------------------------------------------------------------------------------------------
 # main
@@ -89,11 +89,6 @@ lint-fix:
 .PHONY: lint-fmt
 lint-fmt:
 	go run $(GOLANGCI_LINT_PACKAGE) fmt
-
-## format: Run gofumpt tool to fix code format issues
-.PHONY: format
-format:
-	go run mvdan.cc/gofumpt@latest -w -l .
 
 ## deadcode: Run deadcode tool for find unreachable functions
 .PHONY: deadcode

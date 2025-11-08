@@ -78,7 +78,6 @@ Commands:
   lint          Run golangci-lint to lint go files
   lint-fix      Run golangci-lint to lint go files and fix issues
   lint-fmt      Run golangci-lint fmt to show code format issues
-  format        Run gofumpt tool to fix code format issues
   deadcode      Run deadcode tool for find unreachable functions
   audit         Quality checks
   help          Display this help
