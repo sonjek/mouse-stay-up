@@ -1,15 +1,14 @@
+# Reference: https://golangci-lint.run/docs/configuration/file/
 version: "2"
-
 run:
   timeout: 10m
-
 output:
   sort-order:
     - file
-
 formatters:
-  # https://golangci-lint.run/usage/formatters/
+  # https://golangci-lint.run/docs/formatters/
   enable:
+    - gci
     - gofmt
     - gofumpt
     - goimports
@@ -18,25 +17,27 @@ formatters:
       simplify: true
     gofumpt:
       extra-rules: true
-
 linters:
-  # https://golangci-lint.run/usage/linters/#enabled-by-default
+  # https://golangci-lint.run/docs/linters/
+  default: none
   enable:
     - asciicheck
     - depguard
     - dupl
     - dupword
-    - durationcheck
+    - errcheck
     - errorlint
     - gosec
     - ineffassign
     - gocritic
+    - govet
     - misspell
     - mirror
+    - modernize
     - nolintlint
-    - predeclared
     - perfsprint
     - revive
+    - staticcheck
     - testifylint
     - unused
     - usestdlibvars
@@ -78,4 +79,6 @@ linters:
         - name: exported
           disabled: true
         - name: package-comments
+          disabled: true
+        - name: var-naming
           disabled: true
