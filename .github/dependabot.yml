@@ -3,16 +3,14 @@
 version: 2
 updates:
   - package-ecosystem: "gomod"
-    directories:
-      - "**/*"
+    directory: "/"
     schedule:
       interval: "weekly"
-      day: saturday
+      day: "saturday"
     open-pull-requests-limit: 10
   - package-ecosystem: "github-actions"
-    directories:
-      - "**/*"
+    directory: "/"
     schedule:
       interval: "weekly"
-      day: saturday
+      day: "saturday"
     open-pull-requests-limit: 10
