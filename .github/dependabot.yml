@@ -5,12 +5,21 @@ updates:
   - package-ecosystem: "gomod"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "saturday"
+      interval: "daily"
     open-pull-requests-limit: 10
+    assignees:
+      - "sonjek"
+    labels:
+    - "dependencies"
+    - "go"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "saturday"
+      interval: "daily"
     open-pull-requests-limit: 10
+    assignees:
+      - "sonjek"
+    labels:
+    - "dependencies"
+    - "github-actions"
