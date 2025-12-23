@@ -3,7 +3,7 @@ module github.com/sonjek/mouse-stay-up
 go 1.24.0
 
 require (
-	fyne.io/systray v1.11.0
+	fyne.io/systray v1.12.0
 	github.com/adrg/xdg v0.5.3
 	github.com/go-vgo/robotgo v1.0.0
 	gopkg.in/ini.v1 v1.67.0
