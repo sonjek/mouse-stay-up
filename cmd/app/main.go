@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+
 	"github.com/sonjek/mouse-stay-up/internal/config"
 	"github.com/sonjek/mouse-stay-up/internal/keyboard"
 	"github.com/sonjek/mouse-stay-up/internal/mouse"
@@ -8,9 +10,10 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
 	conf := config.NewConfig()
 	mc := mouse.NewController(conf)
 	kc := keyboard.NewController()
-	trayIcon := tray.NewTray(mc, kc, conf)
+	trayIcon := tray.NewTray(ctx, mc, kc, conf)
 	trayIcon.Run()
 }

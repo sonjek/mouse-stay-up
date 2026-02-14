@@ -1,6 +1,7 @@
 package mouse
 
 import (
+	"context"
 	"time"
 
 	"github.com/go-vgo/robotgo"
@@ -10,7 +11,7 @@ import (
 
 type Controller struct {
 	conf         *config.Config
-	LastX, LastY int
+	lastX, lastY int
 }
 
 func NewController(conf *config.Config) *Controller {
@@ -19,15 +20,32 @@ func NewController(conf *config.Config) *Controller {
 	}
 }
 
-func (c *Controller) MoveMouse() {
-	for c.conf.Enabled {
-		// Sleep before the check
-		c.sleep()
+func (c *Controller) MoveMouse(ctx context.Context) {
+	timer := time.NewTimer(0)
+	defer timer.Stop()
+	<-timer.C // prepare timer for Reset inside sleepCtx
+
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		default:
+		}
+
+		// Check if the application is enabled
+		if !c.conf.Enabled {
+			if !sleepCtx(ctx, timer, 10*time.Second) {
+				return
+			}
+			continue
+		}
 
 		// Check if the current time is within working hours.
 		// If not, there is no reason to move the cursor.
-		isWorkingHours := utils.IsInWorkingHours(c.conf.WorkingHoursInterval)
-		if !isWorkingHours {
+		if !utils.IsInWorkingHours(c.conf.WorkingHoursInterval) {
+			if !sleepCtx(ctx, timer, 1*time.Minute) {
+				return
+			}
 			continue
 		}
 
@@ -35,23 +53,34 @@ func (c *Controller) MoveMouse() {
 		curX, curY := robotgo.Location()
 
 		// Check if the mouse position has changed since the previous run
-		// If position has not changed, then move the cursor
-		if c.LastX == curX && c.LastY == curY {
-			// Random movement distance along the X-axis and Y-axis (between -8 and 8)
+		// If position has not changed, then move the cursor randomly (between -8px and 8px)
+		if c.lastX == curX && c.lastY == curY {
 			relX := utils.GetRandomOffset()
 			relY := utils.GetRandomOffset()
-
-			// Move the cursor
 			robotgo.MoveSmoothRelative(relX, relY)
 		}
 
 		// Update last known mouse position
-		c.LastX, c.LastY = robotgo.Location()
+		c.lastX, c.lastY = robotgo.Location()
+
+		// Sleep for a random duration for rendomizing the mouse movement delay
+		if !sleepCtx(ctx, timer, utils.GetRandomSleepDuration()) {
+			return
+		}
 	}
 }
 
-func (c *Controller) sleep() {
-	// Get random duration between 10-60 sec
-	duration := utils.GetRandomSleepDuration()
-	time.Sleep(duration)
+// sleepCtx blocks for the given duration or until ctx is cancelled.
+// Returns true if sleep completed normally, false if the context was cancelled.
+func sleepCtx(ctx context.Context, t *time.Timer, d time.Duration) bool {
+	t.Reset(d)
+	select {
+	case <-ctx.Done():
+		if !t.Stop() {
+			<-t.C
+		}
+		return false
+	case <-t.C:
+		return true
+	}
 }
