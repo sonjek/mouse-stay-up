@@ -1,9 +1,11 @@
 package tray
 
 import (
+	"context"
 	"embed"
 	"fmt"
 	"io"
+	"log"
 	"runtime"
 
 	"fyne.io/systray"
@@ -16,37 +18,47 @@ import (
 //go:embed icon.svg
 var iconFile embed.FS
 
+const tooltipText = "Enable or Disable periodic mouse movements"
+
 func loadIcon() ([]byte, error) {
 	file, err := iconFile.Open("icon.svg")
 	if err != nil {
 		return nil, err
 	}
-
-	// Ignore error checking in Close to resolve the lint error
 	defer func() { _ = file.Close() }()
-
-	data, err := io.ReadAll(file)
-	if err != nil {
-		return nil, err
-	}
-
-	return data, nil
+	return io.ReadAll(file)
 }
 
+// Tray manages the system tray icon and menu.
 type Tray struct {
-	mouseController       *mouse.Controller
-	keyboardController    *keyboard.Controller
-	conf                  *config.Config
-	mEnable               *systray.MenuItem
-	mDisable              *systray.MenuItem
-	mWorkingHours         *systray.MenuItem
-	kUnlockKeyboard       *systray.MenuItem
-	kLockKeyboard         *systray.MenuItem
+	ctx    context.Context
+	cancel context.CancelFunc
+
+	mouseController    *mouse.Controller
+	keyboardController *keyboard.Controller
+	conf               *config.Config
+
+	// Menu items — grouped in display order.
+	mEnable         *systray.MenuItem
+	mDisable        *systray.MenuItem
+	mWorkingHours   *systray.MenuItem
+	mLockKeyboard   *systray.MenuItem
+	mUnlockKeyboard *systray.MenuItem
+	mAbout          *systray.MenuItem
+	mQuit           *systray.MenuItem
+
 	workingHoursMenuItems map[string]*systray.MenuItem
 }
 
-func NewTray(mouseController *mouse.Controller, keyboardController *keyboard.Controller, conf *config.Config) *Tray {
+// NewTray creates a new Tray instance.
+func NewTray(
+	ctx context.Context,
+	mouseController *mouse.Controller,
+	keyboardController *keyboard.Controller,
+	conf *config.Config,
+) *Tray {
 	return &Tray{
+		ctx:                   ctx,
 		mouseController:       mouseController,
 		keyboardController:    keyboardController,
 		conf:                  conf,
@@ -54,102 +66,134 @@ func NewTray(mouseController *mouse.Controller, keyboardController *keyboard.Con
 	}
 }
 
+// Run starts the system tray. It blocks until the user quits.
 func (t *Tray) Run() {
+	t.ctx, t.cancel = context.WithCancel(t.ctx)
+	defer t.cancel()
 	systray.Run(t.onReady, t.onExit)
 }
 
 func (t *Tray) onReady() {
+	if err := t.setupIcon(); err != nil {
+		log.Printf("tray: %v", err)
+		systray.Quit()
+		return
+	}
+	t.setupMenu()
+	t.applyInitialState()
+	go t.runEventLoop()
+	go t.mouseController.MoveMouse(t.ctx)
+}
+
+func (t *Tray) setupIcon() error {
 	icon, err := loadIcon()
 	if err != nil {
-		panic(fmt.Errorf("could not load icon due to error `%s`", err.Error()))
+		return fmt.Errorf("failed to load icon: %w", err)
 	}
-
-	// Set icon and tooltip for the systray icon
 	systray.SetTemplateIcon(icon, icon)
-	systray.SetTooltip("Enable or Disable periodic mouse movements")
+	systray.SetTooltip(tooltipText)
+	return nil
+}
 
-	// Create menu items for enable/disable mouse movement, change working hours and exit
+// setupMenu creates all menu items in display order.
+func (t *Tray) setupMenu() {
 	t.mEnable = systray.AddMenuItem("Enable movement", "Enable mouse movement")
 	t.mDisable = systray.AddMenuItem("Disable movement", "Disable mouse movement")
 	t.mWorkingHours = systray.AddMenuItem("Working hours", "Select a range of working hours")
-	systray.AddSeparator()
-	t.kUnlockKeyboard = systray.AddMenuItem("Unlock keyboard", "Unlock keyboard")
-	t.kLockKeyboard = systray.AddMenuItem("Lock keyboard", "Lock keyboard")
-	systray.AddSeparator()
-	mAbout := systray.AddMenuItem("About", "Open GitHub repo")
-	mQuit := systray.AddMenuItem("Quit", "Quit the application")
-
-	// Add interval selection submenu items
 	for _, hours := range t.conf.WorkingHours {
-		t.addWorkingHoursItems(t.mWorkingHours, hours)
+		t.workingHoursMenuItems[hours] = t.mWorkingHours.AddSubMenuItem(hours, hours)
 	}
 
-	// Adjust visibilities based on the app state
-	t.applyEnableDisable()
-	t.initLockKeyboard()
+	systray.AddSeparator()
 
-	// Set a marker for the default working hours interval
-	t.workingHoursMenuItems[t.conf.WorkingHoursInterval].Check()
+	t.mLockKeyboard = systray.AddMenuItem("Lock keyboard", "Lock keyboard")
+	t.mUnlockKeyboard = systray.AddMenuItem("Unlock keyboard", "Unlock keyboard")
 
-	workingHoursIntervalClicks := t.createWorkingHoursIntervalClicksChannel()
+	systray.AddSeparator()
 
-	go func() {
-		for {
-			select {
-			case <-t.mEnable.ClickedCh:
-				t.conf.ToggleEnableDisable()
-				t.applyEnableDisable()
-			case <-t.mDisable.ClickedCh:
-				t.conf.ToggleEnableDisable()
-				t.applyEnableDisable()
-			case workingHoursInterval := <-workingHoursIntervalClicks:
-				// When an hours interval item is clicked, update the workingHoursInterval interval and checkmarks
-				t.conf.SetWorkingHoursInterval(workingHoursInterval)
-				t.updateNightModeIntervalChecks(t.conf.WorkingHoursInterval)
-			case <-t.kLockKeyboard.ClickedCh:
-				t.applyEnableDisableKeyboard()
-				t.keyboardController.LockKeyboard()
-			case <-t.kUnlockKeyboard.ClickedCh:
-				t.applyEnableDisableKeyboard()
-				t.keyboardController.UnlockKeyboard()
-			case <-mAbout.ClickedCh:
-				if err := utils.OpenWebPage(config.GitRepo); err != nil {
-					panic(err)
-				}
-			case <-mQuit.ClickedCh:
-				systray.Quit()
-				return
+	t.mAbout = systray.AddMenuItem("About", "Open GitHub repo")
+	t.mQuit = systray.AddMenuItem("Quit", "Quit the application")
+}
+
+// applyInitialState sets menu visibility and checks based on the persisted config.
+func (t *Tray) applyInitialState() {
+	t.updateMovementMenuState()
+	t.updateKeyboardMenuState()
+
+	if item, ok := t.workingHoursMenuItems[t.conf.WorkingHoursInterval]; ok {
+		item.Check()
+	}
+}
+
+// runEventLoop handles all menu click events. Must be called in a goroutine.
+func (t *Tray) runEventLoop() {
+	workingHoursClicks := t.mergeWorkingHoursClicks()
+
+	for {
+		select {
+		case <-t.ctx.Done():
+			return
+
+		case <-t.mEnable.ClickedCh:
+			t.conf.ToggleEnableDisable()
+			t.updateMovementMenuState()
+
+		case <-t.mDisable.ClickedCh:
+			t.conf.ToggleEnableDisable()
+			t.updateMovementMenuState()
+
+		case interval := <-workingHoursClicks:
+			t.conf.SetWorkingHoursInterval(interval)
+			t.updateWorkingHoursChecks(interval)
+
+		case <-t.mLockKeyboard.ClickedCh:
+			t.keyboardController.LockKeyboard()
+			t.updateKeyboardMenuState()
+
+		case <-t.mUnlockKeyboard.ClickedCh:
+			t.keyboardController.UnlockKeyboard()
+			t.updateKeyboardMenuState()
+
+		case <-t.mAbout.ClickedCh:
+			if err := utils.OpenWebPage(config.GitRepo); err != nil {
+				log.Printf("tray: failed to open GitHub: %v", err)
 			}
+
+		case <-t.mQuit.ClickedCh:
+			systray.Quit()
+			return
 		}
-	}()
-
-	// Start moving the mouse if app enabled
-	go t.mouseController.MoveMouse()
+	}
 }
 
-// Adds a submenu item for selecting a working hours interval
-func (t *Tray) addWorkingHoursItems(parent *systray.MenuItem, interval string) {
-	t.workingHoursMenuItems[interval] = parent.AddSubMenuItem(interval, interval)
-}
-
-// Creates and returns a channel that listens to all working hours interval item clicks
-func (t *Tray) createWorkingHoursIntervalClicksChannel() <-chan string {
+// mergeWorkingHoursClicks fans-in all working-hours sub-menu clicks into a
+// single channel. Each goroutine is tied to t.ctx and stops on cancellation.
+func (t *Tray) mergeWorkingHoursClicks() <-chan string {
 	clicks := make(chan string)
 	for interval, item := range t.workingHoursMenuItems {
 		go func(interval string, item *systray.MenuItem) {
 			for {
-				<-item.ClickedCh
-				clicks <- interval
+				select {
+				case <-t.ctx.Done():
+					return
+				case <-item.ClickedCh:
+					select {
+					case <-t.ctx.Done():
+						return
+					case clicks <- interval:
+					}
+				}
 			}
 		}(interval, item)
 	}
 	return clicks
 }
 
-// Updates the checkmarks for interval selection
-func (t *Tray) updateNightModeIntervalChecks(selectedInterval string) {
+// updateWorkingHoursChecks sets the checkmark on the selected interval and
+// clears all others.
+func (t *Tray) updateWorkingHoursChecks(selected string) {
 	for interval, item := range t.workingHoursMenuItems {
-		if interval == selectedInterval {
+		if interval == selected {
 			item.Check()
 		} else {
 			item.Uncheck()
@@ -157,8 +201,9 @@ func (t *Tray) updateNightModeIntervalChecks(selectedInterval string) {
 	}
 }
 
-// Adjust visibilities based on the app state
-func (t *Tray) applyEnableDisable() {
+// updateMovementMenuState synchronises the Enable/Disable menu item visibility
+// and the Working Hours menu state with the current config.
+func (t *Tray) updateMovementMenuState() {
 	if t.conf.Enabled {
 		t.mEnable.Hide()
 		t.mDisable.Show()
@@ -170,28 +215,29 @@ func (t *Tray) applyEnableDisable() {
 	}
 }
 
-// Init LockKeyboard visibility
-func (t *Tray) initLockKeyboard() {
-	switch runtime.GOOS {
-	case "darwin":
-		t.kLockKeyboard.Show()
-	default:
-		t.kLockKeyboard.Hide()
+// updateKeyboardMenuState synchronises the Lock/Unlock keyboard menu items
+// with the controller state. On non-darwin platforms both items are hidden.
+func (t *Tray) updateKeyboardMenuState() {
+	if runtime.GOOS != "darwin" {
+		t.mLockKeyboard.Hide()
+		t.mUnlockKeyboard.Hide()
+		return
 	}
 
-	t.kUnlockKeyboard.Hide()
-}
-
-// Adjust visibilities and activity based on the app state
-func (t *Tray) applyEnableDisableKeyboard() {
 	if t.keyboardController.KeyboardLocked {
-		t.kUnlockKeyboard.Hide()
-		t.kLockKeyboard.Show()
+		t.mLockKeyboard.Hide()
+		t.mUnlockKeyboard.Show()
 	} else {
-		t.kUnlockKeyboard.Show()
-		t.kLockKeyboard.Hide()
+		t.mLockKeyboard.Show()
+		t.mUnlockKeyboard.Hide()
 	}
 }
 
 func (t *Tray) onExit() {
+	if t.cancel != nil {
+		t.cancel()
+	}
+	if t.keyboardController.KeyboardLocked {
+		t.keyboardController.UnlockKeyboard()
+	}
 }
