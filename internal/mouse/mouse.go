@@ -42,7 +42,7 @@ func (c *Controller) MoveMouse(ctx context.Context) {
 
 		// Check if the current time is within working hours.
 		// If not, there is no reason to move the cursor.
-		if !utils.IsInWorkingHours(c.conf.WorkingHoursInterval) {
+		if !utils.IsInWorkingHours(time.Now(), c.conf.WorkingHoursInterval) {
 			if !sleepCtx(ctx, timer, 1*time.Minute) {
 				return
 			}
