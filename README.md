@@ -65,19 +65,17 @@ All available makefile actions:
 Usage:  make COMMAND
 
 Commands:
-  build         Build application
-  clean         Remove binary file from local bin directory
-  install       Install binary file from local bin directory to /usr/local/bin/
-  uninstall     Remove binary file from /usr/local/bin/
-  start         Build and start application
-  test          Run unit tests
-  check-go      Ensure that Go is installed
-  tidy          Removes unused dependencies and adds missing ones
-  update-deps   Update go dependencies
-  get-deps      Download application dependencies
-  lint          Run golangci-lint to lint go files
-  lint-fix      Run golangci-lint to lint go files and fix issues
-  lint-fmt      Run golangci-lint fmt to show code format issues
-  audit         Quality checks
-  help          Display this help
+  build       Build application
+  clean       Remove binary file from local bin directory
+  install     Install binary file from local bin directory to /usr/local/bin/
+  uninstall   Remove binary file from /usr/local/bin/
+  start       Build and start application
+  test        Run unit tests
+  check-go    Ensure that Go is installed
+  get-deps    Download application dependencies
+  lint        Run golangci-lint to lint go files
+  lint-fix    Run golangci-lint to lint go files and fix issues
+  format      Run golangci-lint fmt to show code format issues
+  audit       Quality checks
+  help        Display this help
 ```

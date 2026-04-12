@@ -1,4 +1,4 @@
-package utils
+package browser
 
 import (
 	"errors"
@@ -15,7 +15,7 @@ func OpenWebPage(url string) error {
 	case "linux":
 		cmd = "xdg-open"
 	default:
-		return errors.New("utils: unsupported platform")
+		return errors.New("browser: unsupported platform")
 	}
 	return exec.Command(cmd, url).Start() //nolint:gosec // cmd is a fixed platform command, not user input
 }
