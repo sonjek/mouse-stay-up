@@ -1,4 +1,4 @@
-package utils
+package jitter
 
 import (
 	"math/rand/v2"

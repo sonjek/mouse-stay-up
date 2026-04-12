@@ -10,9 +10,9 @@ import (
 
 	"fyne.io/systray"
 	"github.com/sonjek/mouse-stay-up/internal/config"
-	"github.com/sonjek/mouse-stay-up/internal/keyboard"
 	"github.com/sonjek/mouse-stay-up/internal/mouse"
-	"github.com/sonjek/mouse-stay-up/internal/utils"
+	"github.com/sonjek/mouse-stay-up/pkg/browser"
+	"github.com/sonjek/mouse-stay-up/pkg/keyboard"
 )
 
 //go:embed icon.svg
@@ -155,7 +155,7 @@ func (t *Tray) runEventLoop() {
 			t.updateKeyboardMenuState()
 
 		case <-t.mAbout.ClickedCh:
-			if err := utils.OpenWebPage(config.GitRepo); err != nil {
+			if err := browser.OpenWebPage(config.GitRepo); err != nil {
 				log.Printf("tray: failed to open GitHub: %v", err)
 			}
 

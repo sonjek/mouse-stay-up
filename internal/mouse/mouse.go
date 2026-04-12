@@ -6,7 +6,8 @@ import (
 
 	"github.com/go-vgo/robotgo"
 	"github.com/sonjek/mouse-stay-up/internal/config"
-	"github.com/sonjek/mouse-stay-up/internal/utils"
+	"github.com/sonjek/mouse-stay-up/internal/jitter"
+	"github.com/sonjek/mouse-stay-up/internal/timewindow"
 )
 
 type Controller struct {
@@ -42,7 +43,7 @@ func (c *Controller) MoveMouse(ctx context.Context) {
 
 		// Check if the current time is within working hours.
 		// If not, there is no reason to move the cursor.
-		if !utils.IsInWorkingHours(time.Now(), c.conf.WorkingHoursInterval) {
+		if !timewindow.IsInWorkingHours(time.Now(), c.conf.WorkingHoursInterval) {
 			if !sleepCtx(ctx, timer, 1*time.Minute) {
 				return
 			}
@@ -55,8 +56,8 @@ func (c *Controller) MoveMouse(ctx context.Context) {
 		// Check if the mouse position has changed since the previous run
 		// If position has not changed, then move the cursor randomly (between -8px and 8px)
 		if c.lastX == curX && c.lastY == curY {
-			relX := utils.GetRandomOffset()
-			relY := utils.GetRandomOffset()
+			relX := jitter.GetRandomOffset()
+			relY := jitter.GetRandomOffset()
 			robotgo.MoveSmoothRelative(relX, relY)
 		}
 
@@ -64,7 +65,7 @@ func (c *Controller) MoveMouse(ctx context.Context) {
 		c.lastX, c.lastY = robotgo.Location()
 
 		// Sleep for a random duration for rendomizing the mouse movement delay
-		if !sleepCtx(ctx, timer, utils.GetRandomSleepDuration()) {
+		if !sleepCtx(ctx, timer, jitter.GetRandomSleepDuration()) {
 			return
 		}
 	}

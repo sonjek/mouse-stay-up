@@ -3,7 +3,7 @@ BINNAME := mouse-stay-up
 TARGET_BIN := $(BINDIR)/$(BINNAME)
 INSTALL_PATH := /usr/local/bin
 
-GOLANGCI_LINT_PACKAGE ?= github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.9.0
+GOLANGCI_LINT_PACKAGE ?= github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.11.4
 
 # -------------------------------------------------------------------------------------------------
 # main
@@ -59,17 +59,6 @@ test: check-go
 check-go:
 	@command -v go &> /dev/null || (echo "Please install GoLang" && false)
 
-## tidy: Removes unused dependencies and adds missing ones
-.PHONY: tidy
-tidy: check-go
-	go mod tidy
-
-## update-deps: Update go dependencies
-.PHONY: update-deps
-update-deps: check-go
-	go get -u ./...
-	-@$(MAKE) tidy
-
 ## get-deps: Download application dependencies
 .PHONY: get-deps
 get-deps: check-go
@@ -85,9 +74,9 @@ lint:
 lint-fix:
 	go run $(GOLANGCI_LINT_PACKAGE) run --fix
 
-## lint-fmt: Run golangci-lint fmt to show code format issues
-.PHONY: lint-fmt
-lint-fmt:
+## format: Run golangci-lint fmt to show code format issues
+.PHONY: format
+format:
 	go run $(GOLANGCI_LINT_PACKAGE) fmt
 
 ## audit: Quality checks

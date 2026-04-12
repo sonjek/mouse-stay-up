@@ -1,4 +1,4 @@
-package utils
+package timewindow
 
 import (
 	"log"
@@ -11,7 +11,7 @@ import (
 func IsInWorkingHours(now time.Time, timeWindow string) bool {
 	parts := strings.SplitN(timeWindow, "-", 2)
 	if len(parts) != 2 {
-		log.Printf("utils: invalid time window format: %q", timeWindow)
+		log.Printf("timewindow: invalid time window format: %q", timeWindow)
 		return false
 	}
 
@@ -21,13 +21,13 @@ func IsInWorkingHours(now time.Time, timeWindow string) bool {
 
 	start, ok := parseTimeToMinutes(parts[0])
 	if !ok {
-		log.Printf("utils: invalid start time: %q", parts[0])
+		log.Printf("timewindow: invalid start time: %q", parts[0])
 		return false
 	}
 
 	end, ok := parseTimeToMinutes(parts[1])
 	if !ok {
-		log.Printf("utils: invalid end time: %q", parts[1])
+		log.Printf("timewindow: invalid end time: %q", parts[1])
 		return false
 	}
 
