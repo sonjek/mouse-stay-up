@@ -1,6 +1,6 @@
 # Mouse-Stay-Up
 
-[![ci status](https://github.com/sonjek/mouse-stay-up/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/sonjek/mouse-stay-up/actions/workflows/ci.yml) [![Go Report Card](https://goreportcard.com/badge/github.com/sonjek/mouse-stay-up)](https://goreportcard.com/report/github.com/sonjek/mouse-stay-up) [![Contributors](https://img.shields.io/github/contributors/sonjek/mouse-stay-up)](https://github.com/sonjek/mouse-stay-up/graphs/contributors) [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/sonjek/mouse-stay-up?include_prereleases)](https://github.com/sonjek/mouse-stay-up/releases) [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/sonjek/mouse-stay-up/blob/master/LICENSE)
+[![ci status](https://github.com/sonjek/mouse-stay-up/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/sonjek/mouse-stay-up/actions/workflows/ci.yml) [![Go Report Card](https://goreportcard.com/badge/github.com/sonjek/mouse-stay-up)](https://goreportcard.com/report/github.com/sonjek/mouse-stay-up) [![Contributors](https://img.shields.io/github/contributors/sonjek/mouse-stay-up)](https://github.com/sonjek/mouse-stay-up/graphs/contributors) ![Go](https://img.shields.io/github/go-mod/go-version/sonjek/mouse-stay-up?label=go) [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/sonjek/mouse-stay-up?include_prereleases)](https://github.com/sonjek/mouse-stay-up/releases) [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/sonjek/mouse-stay-up/blob/master/LICENSE)
 
 
 This lightweight application is designed to prevent your computer from entering sleep mode by periodically moving the cursor when it detects periods of inactivity.
@@ -19,63 +19,96 @@ More info in [systray](https://github.com/fyne-io/systray?tab=readme-ov-file#lin
 For Debian-based systems with GTK based trays, use [this](https://gist.github.com/archisman-panigrahi/cd571ddea1aa2c5e2b4fa7bcbee7d5df) script to install **snixembed**.
 
 
-### Build the Application
+### Install
 
-
-1. Verify that you have `Go 1.26+` installed
-   ```sh
-   $ go version
-   ```
-
-   If `go` is not installed, follow instructions on the [Go website](https://golang.org/doc/install).
+1. Verify that you have `Go 1.26+` installed. If `go` is not installed, follow instructions on the [Go website](https://go.dev/doc/install).
 
 2. Clone this repository
-   ```sh
-   $ git clone https://github.com/sonjek/mouse-stay-up
-   $ cd mouse-stay-up
-   ```
+
+```sh
+git clone https://github.com/sonjek/mouse-stay-up && cd mouse-stay-up
+```
 
 3. Build
-    ```sh
-    $ make build
-    ```
 
-    The binary file is built and ready to run:
-    ```
-    $ ./bin/mouse-stay-up
-    ```
+```sh
+make build
+```
+
+The binary file is built and ready to run:
+
+```sh
+./bin/mouse-stay-up
+```
 
 4. You can install the binary file to your OS.
 
    Installs to `/usr/local/bin/` by default:
-    ```
-    $ make install
-    or
-    $ sudo make install
-    ```
 
-   Install to a different location:
-    ```
-    $ make install INSTALL_PATH=/tmp
-    ```
-
-All available makefile actions:
 ```sh
-% make
-Usage:  make COMMAND
-
-Commands:
-  build       Build application
-  clean       Remove binary file from local bin directory
-  install     Install binary file from local bin directory to /usr/local/bin/
-  uninstall   Remove binary file from /usr/local/bin/
-  start       Build and start application
-  test        Run unit tests
-  check-go    Ensure that Go is installed
-  get-deps    Download application dependencies
-  lint        Run golangci-lint to lint go files
-  lint-fix    Run golangci-lint to lint go files and fix issues
-  format      Run golangci-lint fmt to show code format issues
-  audit       Quality checks
-  help        Display this help
+make install
 ```
+
+or
+
+```sh
+sudo make install
+```
+
+Install to a different location:
+
+```sh
+make install INSTALL_PATH=/tmp
+```
+
+### MacOS
+
+#### Autostart at login
+
+1. Create a new file in `~/Library/LaunchAgents/` called `com.github.sonjek.mouse-stay-up.plist` with the following contents:
+
+```sh
+cat <<EOF > ~/Library/LaunchAgents/com.github.sonjek.mouse-stay-up.plist
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.sonjek.mouse-stay-up</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/local/bin/mouse-stay-up</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <false/>
+    <key>StandardOutPath</key>
+    <string>/tmp/mouse-stay-up.stdout.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/mouse-stay-up.stderr.log</string>
+</dict>
+</plist>
+EOF
+```
+or
+
+```sh
+cp deployments/com.github.sonjek.mouse-stay-up.plist ~/Library/LaunchAgents/com.github.sonjek.mouse-stay-up.plist
+```
+
+2. Load the launch agent:
+
+```sh
+launchctl load ~/Library/LaunchAgents/com.github.sonjek.mouse-stay-up.plist
+```
+
+#### Access rights
+
+1. Accessibility permissions are required for the keyboard lock to function. Please grant these permissions in settings to enable this feature:
+- Go to `System Settings > Privacy & Security > Accessibility`.
+- Enable `mouse-stay-up`.
+
+2. To disable background activity:
+- Go to `System Settings > General > Login Items & Extensions`.
+- Disable `mouse-stay-up` in app background activity section.
