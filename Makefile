@@ -14,7 +14,7 @@ all: help
 ## build: Build application
 .PHONY: build
 build: get-deps
-	go build -ldflags="-s -w" -trimpath -o '$(TARGET_BIN)' ./cmd/app
+	go build -ldflags="-s -w" -trimpath -o '$(TARGET_BIN)' ./cmd/mouse-stay-up
 	@echo "Binary file located in '$(TARGET_BIN)'"
 
 ## clean: Remove binary file from local bin directory
@@ -39,7 +39,7 @@ uninstall: clean
 ## start: Build and start application
 .PHONY: start
 start: get-deps
-	go run ./cmd/app
+	go run ./cmd/mouse-stay-up
 
 # -------------------------------------------------------------------------------------------------
 # testing
