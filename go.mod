@@ -6,7 +6,7 @@ require (
 	fyne.io/systray v1.12.1
 	github.com/adrg/xdg v0.5.3
 	github.com/go-vgo/robotgo v1.0.2
-	gopkg.in/ini.v1 v1.67.1
+	gopkg.in/ini.v1 v1.67.2
 )
 
 require (
