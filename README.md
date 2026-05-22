@@ -2,7 +2,6 @@
 
 [![ci status](https://github.com/sonjek/mouse-stay-up/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/sonjek/mouse-stay-up/actions/workflows/ci.yml) [![Go Report Card](https://goreportcard.com/badge/github.com/sonjek/mouse-stay-up)](https://goreportcard.com/report/github.com/sonjek/mouse-stay-up) [![Contributors](https://img.shields.io/github/contributors/sonjek/mouse-stay-up)](https://github.com/sonjek/mouse-stay-up/graphs/contributors) ![Go](https://img.shields.io/github/go-mod/go-version/sonjek/mouse-stay-up?label=go) [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/sonjek/mouse-stay-up?include_prereleases)](https://github.com/sonjek/mouse-stay-up/releases) [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/sonjek/mouse-stay-up/blob/master/LICENSE)
 
-
 This lightweight application is designed to prevent your computer from entering sleep mode by periodically moving the cursor when it detects periods of inactivity.
 Additionally, the program allows you to disable the keyboard programmatically (MacOS only).
 
@@ -21,15 +20,36 @@ For Debian-based systems with GTK based trays, use [this](https://gist.github.co
 
 ### Install
 
-1. Verify that you have `Go 1.26+` installed. If `go` is not installed, follow instructions on the [Go website](https://go.dev/doc/install).
+Verify that you have `Go 1.26+` installed. If `go` is not installed, follow instructions on the [Go website](https://go.dev/doc/install).
 
-2. Clone this repository
+#### Install via go install
+
+```sh
+go install github.com/sonjek/mouse-stay-up/cmd/mouse-stay-up@latest
+```
+
+This should download the source code and compile the executable into `$GOPATH/bin/mouse-stay-up`.
+
+Make sure `$GOPATH/bin` is in your `$PATH` so the shell can discover this application.
+
+For example, my `~/.profile` contains this:
+
+```sh
+export GOPATH="$HOME/go"
+export PATH="$GOPATH/bin:$PATH"
+```
+
+Alternatively, you can run this application using the full path `/Users/<USERNAME>/go/bin/mouse-stay-up`.
+
+#### Build yourself
+
+1. Clone this repository
 
 ```sh
 git clone https://github.com/sonjek/mouse-stay-up && cd mouse-stay-up
 ```
 
-3. Build
+2. Build
 
 ```sh
 make build
@@ -41,7 +61,7 @@ The binary file is built and ready to run:
 ./bin/mouse-stay-up
 ```
 
-4. You can install the binary file to your OS.
+3. You can install the binary file to your OS.
 
    Installs to `/usr/local/bin/` by default:
 
@@ -55,7 +75,7 @@ or
 sudo make install
 ```
 
-Install to a different location:
+Install to a custom location:
 
 ```sh
 make install INSTALL_PATH=/tmp
@@ -96,6 +116,8 @@ or
 ```sh
 cp deployments/com.github.sonjek.mouse-stay-up.plist ~/Library/LaunchAgents/com.github.sonjek.mouse-stay-up.plist
 ```
+
+If you used `go install`, update the application path to `/Users/<USERNAME>/go/bin/mouse-stay-up`.
 
 2. Load the launch agent:
 
