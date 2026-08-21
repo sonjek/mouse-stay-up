@@ -20,7 +20,7 @@ For Debian-based systems with GTK based trays, use [this](https://gist.github.co
 
 ### Install
 
-Verify that you have `Go 1.26+` installed. If `go` is not installed, follow instructions on the [Go website](https://go.dev/doc/install).
+Verify that you have `Go 1.27+` installed. If `go` is not installed, follow instructions on the [Go website](https://go.dev/doc/install).
 
 #### Install via go install
 

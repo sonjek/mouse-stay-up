@@ -3,7 +3,7 @@ BINNAME := mouse-stay-up
 TARGET_BIN := $(BINDIR)/$(BINNAME)
 INSTALL_PATH := /usr/local/bin
 
-GOLANGCI_LINT_PACKAGE ?= github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.11.4
+GOLANGCI_LINT_PACKAGE ?= github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.13.1
 
 # -------------------------------------------------------------------------------------------------
 # main
