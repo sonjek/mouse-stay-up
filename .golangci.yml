@@ -5,6 +5,7 @@ run:
 output:
   sort-order:
     - file
+
 formatters:
   # https://golangci-lint.run/docs/formatters/
   enable:
@@ -16,7 +17,12 @@ formatters:
     gofmt:
       simplify: true
     gofumpt:
-      extra-rules: true
+      extra:
+        group-params: true
+  exclusions:
+    paths:
+      - ^tmp/
+
 linters:
   # https://golangci-lint.run/docs/linters/
   default: none
@@ -82,3 +88,7 @@ linters:
           disabled: true
         - name: var-naming
           disabled: true
+  exclusions:
+    paths:
+      - ^tmp/
+
