@@ -5,7 +5,7 @@ go 1.27.0
 require (
 	fyne.io/systray v1.12.2
 	github.com/adrg/xdg v0.5.3
-	github.com/go-vgo/robotgo v1.0.2
+	github.com/go-vgo/robotgo v1.1.0
 	gopkg.in/ini.v1 v1.67.3
 )
 
@@ -24,6 +24,7 @@ require (
 	github.com/tailscale/win v0.0.0-20260619195133-2d76c33a64c1 // indirect
 	github.com/tklauser/go-sysconf v0.4.0 // indirect
 	github.com/tklauser/numcpus v0.12.0 // indirect
+	github.com/vcaesar/go-wayland v0.40.0 // indirect
 	github.com/vcaesar/gops v0.42.0 // indirect
 	github.com/vcaesar/imgo v0.42.0 // indirect
 	github.com/vcaesar/keycode v0.20.0 // indirect

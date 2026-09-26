@@ -16,8 +16,8 @@ github.com/gen2brain/shm v0.2.2/go.mod h1:UgIcVtvmOu+aCJpqJX7GOtiN7X2ct+TKLg4RTx
 github.com/go-ole/go-ole v1.2.6/go.mod h1:pprOEPIfldk/42T2oK7lQ4v4JSDwmV0As9GaiUsvbm0=
 github.com/go-ole/go-ole v1.3.0 h1:Dt6ye7+vXGIKZ7Xtk4s6/xVdGDQynvom7xCFEdWr6uE=
 github.com/go-ole/go-ole v1.3.0/go.mod h1:5LS6F96DhAwUc7C+1HLexzMXY1xGRSryjyPPKW6zv78=
-github.com/go-vgo/robotgo v1.0.2 h1:MbhSoJSzv/PNr2dL6H0Z1IUL4Uypsk2b9lQsGQ15hjU=
-github.com/go-vgo/robotgo v1.0.2/go.mod h1:wb9ozpOGZS0mHt1+hg4UXzyZe9A8qytjKB84tG9iNyM=
+github.com/go-vgo/robotgo v1.1.0 h1:DTgm0+Svc6VdMYLrE7rCrylYCeYkrgVk8+2jCBsbCjM=
+github.com/go-vgo/robotgo v1.1.0/go.mod h1:RE3G6+Je4v5R8pIFHUO5BFVDhx1qICVontp4dqlgT6s=
 github.com/godbus/dbus/v5 v5.2.2 h1:TUR3TgtSVDmjiXOgAAyaZbYmIeP3DPkld3jgKGV8mXQ=
 github.com/godbus/dbus/v5 v5.2.2/go.mod h1:3AAv2+hPq5rdnr5txxxRwiGjPXamgoIHgz9FPBfOp3c=
 github.com/google/go-cmp v0.7.0 h1:wk8382ETsv4JYUZwIsn6YpYiWiBsYLSJiTsyBybVuN8=
@@ -58,6 +58,8 @@ github.com/tklauser/go-sysconf v0.4.0 h1:7H0uAN+7RkwWRaxhYXDLqa5V3LPrJeV8wmD9dRU
 github.com/tklauser/go-sysconf v0.4.0/go.mod h1:8mTNWyog7H+MpKijp4VmKJAd2bbYQ2zuUwkYRbUArPI=
 github.com/tklauser/numcpus v0.12.0 h1:NR85qdvHA9pFse3x3weVZ0r0ST8R6l5RHbZrlRaqob4=
 github.com/tklauser/numcpus v0.12.0/go.mod h1:ABHeXzJnr/qqwguhClkZKT1/8VABcYrsyUiUGobwWJg=
+github.com/vcaesar/go-wayland v0.40.0 h1:DU55bzHtGaktBud6bdvIJk4g0TJAhqs+7uaKelmzekI=
+github.com/vcaesar/go-wayland v0.40.0/go.mod h1:U0zLXEpcV69BpsYGnQnypQ5DZNY4OP+6YYuu0FROoE4=
 github.com/vcaesar/gops v0.42.0 h1:V6jicdnDBNLcQgJzaBkEB4Ci80PCvaEZkc1NiToeafI=
 github.com/vcaesar/gops v0.42.0/go.mod h1:RiZvZ1Ah7WmBwFGhiNsITfPaJn1n02nOwWVdb/r3q8w=
 github.com/vcaesar/imgo v0.42.0 h1:zG9SE/zztBwlIFezIEoh20OWxsgFtGCbjEGXRZEgOrA=
